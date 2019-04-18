@@ -1,0 +1,22 @@
+{
+  "name": "viewdoc",
+  "private": true,
+  "scripts": {
+    "init": "npm run boot && npm run build:dev && npm run boot && npm run build",
+    "boot": "lerna bootstrap --hoist",
+    "link": "lerna link",
+    "clean": "node ./scripts/dev run clean",
+    "clean:all": "npm run clean && node ./scripts/dev run clean:all && lerna clean --yes",
+    "build:dev": "cd ./tools/dev && npm run build",
+    "build": "node ./scripts/dev run build",
+    "format": "node ./scripts/dev run format",
+    "watch": "node ./scripts/dev watch build",
+    "prewatch": "npm run build",
+    "check:deps": "node ./scripts/dev checkdeps",
+    "publish:try": "node ./scripts/dev run publish:prepare && lerna version --no-push",
+    "publish:now": "node ./scripts/dev run publish:prepare && lerna publish"
+  },
+  "devDependencies": {
+    "lerna": "3.13.3"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-standard",
+    "tslint-react"
+  ],
+  "rules": {
+    "space-before-function-paren": true,
+    "arrow-parens": true,
+    "interface-name": false,
+    "ordered-imports": true,
+    "object-literal-sort-keys": false,
+    "member-access": false,
+    "trailing-comma": [true, { "multiline": "always", "singleline": "never" }],
+    "eofline": false,
+    "quotemark": [true, "single"],
+    "indent": false,
+    "no-implicit-dependencies": false,
+    "no-unnecessary-initializer": false,
+    "unified-signatures": false,
+    "max-line-length": [150],
+    "member-ordering": [false],
+    "curly": false,
+    "array-type": [false],
+    "no-empty-interface": false,
+    "no-empty": false,
+    "no-unused-expression": false,
+    "max-classes-per-file": [false],
+    "ban-types": false,
+    "variable-name": [false],
+    "one-line": [false],
+    "one-variable-per-declaration": [false],
+    "no-return-await": true,
+    "match-default-export-name": false,
+    "prefer-readonly": true,
+    "no-null-keyword": true,
+    "no-console": false,
+    "no-unused-variable": true,
+    "jsx-boolean-value": [true, "never"],
+    "jsx-no-multiline-js": false
+  }
+}
