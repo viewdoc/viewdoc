@@ -1,0 +1,10 @@
+{
+  "extends": "./node_modules/@viewdoc/dev/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "lib"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": []
+}

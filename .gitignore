@@ -175,3 +175,7 @@ packages/**/es6
 
 tools/**/package-lock.json
 tools/**/lib
+
+# Only store default config
+/config/*
+!/config/default.*
