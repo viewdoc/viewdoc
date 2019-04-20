@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { getRepoInfo, getRepoReadme, MarkupFile, RepoInfo } from './github'
+import joinUrl from 'url-join'
+import { getRepoFile, getRepoInfo, getRepoReadme, MarkupFile, RepoInfo } from './github'
 
 export interface RenderPageOptions {
   owner: string
@@ -33,5 +34,10 @@ export const renderPage = async (options: RenderPageOptions, req: Request, res: 
     renderMarkupFile(res, repoInfo, readme)
     return
   }
-  next()
+  const file: MarkupFile | undefined = await getRepoFile(repoInfo, ref, filePath)
+  if (!file) {
+    res.redirect(joinUrl('https://github.com', owner, repo, 'blob', ref, filePath))
+    return
+  }
+  renderMarkupFile(res, repoInfo, file)
 }

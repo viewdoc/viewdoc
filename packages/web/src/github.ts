@@ -1,8 +1,8 @@
-import Octokit, { ReposGetResponse, ReposGetReadmeResponse } from '@octokit/rest'
-import config from 'config'
-import marked from 'marked'
+import Octokit, { ReposGetReadmeResponse, ReposGetResponse } from '@octokit/rest'
 import cheerio from 'cheerio'
+import config from 'config'
 import isRelativeUrl from 'is-relative-url'
+import marked from 'marked'
 import joinUrl from 'url-join'
 
 interface GithubConfig {
@@ -42,10 +42,17 @@ type HtmlTransformer = (select: CheerioStatic, repoInfo: RepoInfo, ref: string) 
 
 const fixUrls = (select: CheerioStatic, repoInfo: RepoInfo, ref: string) => {
   select('img').each((index, element) => {
-    const img = select(element)
-    const url = img.attr('src')
+    const image = select(element)
+    const url = image.attr('src')
     if (isRelativeUrl(url)) {
-      img.attr('src', joinUrl('https://raw.githack.com', repoInfo.owner, repoInfo.repo, ref, url))
+      image.attr('src', joinUrl('https://raw.githack.com', repoInfo.owner, repoInfo.repo, ref, url))
+    }
+  })
+  select('a').each((index, element) => {
+    const anchor = select(element)
+    const url = anchor.attr('href')
+    if (isRelativeUrl(url)) {
+      anchor.attr('href', joinUrl(repoInfo.repo, url))
     }
   })
 }
@@ -66,11 +73,50 @@ export interface MarkupFile {
   htmlContent: string
 }
 
+const decodeFileContent = (content: string): string => {
+  return Buffer.from(content, 'base64').toString()
+}
+
 export const getRepoReadme = async (repoInfo: RepoInfo, ref: string): Promise<MarkupFile> => {
   const { owner, repo } = repoInfo
   const reposGetReadme: ReposGetReadmeResponse = (await octokit.repos.getReadme({ owner, repo, ref })).data
   return {
     path: reposGetReadme.path,
-    htmlContent: markdownToHtml(Buffer.from(reposGetReadme.content, 'base64').toString(), repoInfo, ref),
+    htmlContent: markdownToHtml(decodeFileContent(reposGetReadme.content), repoInfo, ref),
   }
+}
+
+interface GithubFileResponse {
+  name: string
+  path: string
+  content: string
+}
+
+type ReposGetContentsResponse = GithubFileResponse | GithubFileResponse[]
+
+export const getRepoFile = async (
+  repoInfo: RepoInfo,
+  ref: string,
+  filePath: string,
+): Promise<MarkupFile | undefined> => {
+  const { owner, repo } = repoInfo
+  const content: ReposGetContentsResponse = (await octokit.repos.getContents({ owner, repo, ref, path: filePath })).data
+  if (Array.isArray(content)) {
+    // Directory
+    const dirContent = content
+    const indexFile = dirContent.find((subFile) => subFile.name.toLowerCase() === 'readme.md')
+    if (indexFile) {
+      return getRepoFile(repoInfo, ref, indexFile.path)
+    }
+    return
+  }
+  // File
+  const fileContent = content
+  if (fileContent.path.toLowerCase().indexOf('.md') !== -1) {
+    return {
+      path: fileContent.path,
+      htmlContent: markdownToHtml(decodeFileContent(fileContent.content), repoInfo, ref),
+    }
+  }
+  return
 }
