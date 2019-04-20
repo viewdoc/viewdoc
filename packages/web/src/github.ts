@@ -1,5 +1,6 @@
-import Octokit, { ReposGetReadmeParams, ReposGetResponse } from '@octokit/rest'
+import Octokit, { ReposGetResponse, ReposGetReadmeResponse } from '@octokit/rest'
 import config from 'config'
+import marked from 'marked'
 
 interface GithubConfig {
   accessToken: string
@@ -34,15 +35,20 @@ export const getRepoInfo = async (owner: string, repo: string): Promise<RepoInfo
   }
 }
 
-export const getRepoReadme = async (repoInfo: RepoInfo, ref: string): Promise<string> => {
+const markdownToHtml = (markdown: string): string => {
+  return marked(markdown)
+}
+
+export interface MarkupFile {
+  path: string
+  htmlContent: string
+}
+
+export const getRepoReadme = async (repoInfo: RepoInfo, ref: string): Promise<MarkupFile> => {
   const { owner, repo } = repoInfo
-  const params: ReposGetReadmeParams = { owner, repo, ref }
-  const paramsWithMediaType: ReposGetReadmeParams = {
-    ...params,
-    mediaType: {
-      format: 'html',
-    },
-  } as ReposGetReadmeParams
-  const reposGetReadme = (await octokit.repos.getReadme(paramsWithMediaType)).data
-  return (reposGetReadme as unknown) as string
+  const reposGetReadme: ReposGetReadmeResponse = (await octokit.repos.getReadme({ owner, repo, ref })).data
+  return {
+    path: reposGetReadme.path,
+    htmlContent: markdownToHtml(Buffer.from(reposGetReadme.content, 'base64').toString()),
+  }
 }

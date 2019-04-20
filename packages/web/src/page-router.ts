@@ -6,7 +6,7 @@ export const pageRouter: Router = express.Router()
 interface PageParams {
   owner: string
   repoId: string
-  0: string
+  0?: string // optional file path
 }
 
 const parseRepoId = (repoId: string) => {
@@ -17,30 +17,27 @@ const parseRepoId = (repoId: string) => {
   }
 }
 
-pageRouter.get('/:owner/:repoId', async (req: Request, res: Response, next: NextFunction) => {
-  const params = req.params as PageParams
-  await renderPage(
-    {
-      owner: params.owner,
-      ...parseRepoId(params.repoId),
-      filePath: '/',
-    },
-    req,
-    res,
-    next,
-  )
-})
+const handlePage = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.params as PageParams
+    await renderPage(
+      {
+        owner: params.owner,
+        ...parseRepoId(params.repoId),
+        filePath: params[0] || '/',
+      },
+      req,
+      res,
+      next,
+    )
+  } catch (err) {
+    if (err.status === 404) {
+      next()
+      return
+    }
+    next(err)
+  }
+}
 
-pageRouter.get('/:owner/:repoId/*', async (req: Request, res: Response, next: NextFunction) => {
-  const params = req.params as PageParams
-  await renderPage(
-    {
-      owner: params.owner,
-      ...parseRepoId(params.repoId),
-      filePath: params[0],
-    },
-    req,
-    res,
-    next,
-  )
-})
+pageRouter.get('/:owner/:repoId', handlePage)
+pageRouter.get('/:owner/:repoId/*', handlePage)
