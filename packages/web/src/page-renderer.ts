@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { getRepoInfo, getRepoReadme, RepoInfo, MarkupFile } from './github'
+import { getRepoInfo, getRepoReadme, MarkupFile, RepoInfo } from './github'
 
 export interface RenderPageOptions {
   owner: string
@@ -9,12 +9,13 @@ export interface RenderPageOptions {
 }
 
 const renderMarkupFile = (res: Response, repoInfo: RepoInfo, markupFile: MarkupFile) => {
+  const repoTitle = `${repoInfo.owner}/${repoInfo.repo}${repoInfo.description ? `: ${repoInfo.description}` : ''}`
   res.send(`
     <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-        <title>${repoInfo.owner}/${repoInfo.repo}${repoInfo.description ? `: ${repoInfo.description}` : ''} - ViewDoc</title>
+        <title>${repoTitle} - ViewDoc</title>
         <link rel="stylesheet" type="text/css" href="https://rawcdn.githack.com/mblode/marx/49921073cbb2e01d50a9cc66164c5e5cc0abec97/css/marx.min.css">
       </head>
       <body><main>${markupFile.htmlContent}</main></body>

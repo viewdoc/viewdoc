@@ -1,6 +1,9 @@
 import Octokit, { ReposGetResponse, ReposGetReadmeResponse } from '@octokit/rest'
 import config from 'config'
 import marked from 'marked'
+import cheerio from 'cheerio'
+import isRelativeUrl from 'is-relative-url'
+import joinUrl from 'url-join'
 
 interface GithubConfig {
   accessToken: string
@@ -35,8 +38,27 @@ export const getRepoInfo = async (owner: string, repo: string): Promise<RepoInfo
   }
 }
 
-const markdownToHtml = (markdown: string): string => {
-  return marked(markdown)
+type HtmlTransformer = (select: CheerioStatic, repoInfo: RepoInfo, ref: string) => void
+
+const fixUrls = (select: CheerioStatic, repoInfo: RepoInfo, ref: string) => {
+  select('img').each((index, element) => {
+    const img = select(element)
+    const url = img.attr('src')
+    if (isRelativeUrl(url)) {
+      img.attr('src', joinUrl('https://raw.githack.com', repoInfo.owner, repoInfo.repo, ref, url))
+    }
+  })
+}
+
+const transformHtml = (rawHtml: string, repoInfo: RepoInfo, ref: string): string => {
+  const select: CheerioStatic = cheerio.load(rawHtml)
+  const transformers: HtmlTransformer[] = [fixUrls]
+  transformers.forEach((transformer) => transformer(select, repoInfo, ref))
+  return select.html()
+}
+
+const markdownToHtml = (markdown: string, repoInfo: RepoInfo, ref: string): string => {
+  return transformHtml(marked(markdown), repoInfo, ref)
 }
 
 export interface MarkupFile {
@@ -49,6 +71,6 @@ export const getRepoReadme = async (repoInfo: RepoInfo, ref: string): Promise<Ma
   const reposGetReadme: ReposGetReadmeResponse = (await octokit.repos.getReadme({ owner, repo, ref })).data
   return {
     path: reposGetReadme.path,
-    htmlContent: markdownToHtml(Buffer.from(reposGetReadme.content, 'base64').toString()),
+    htmlContent: markdownToHtml(Buffer.from(reposGetReadme.content, 'base64').toString(), repoInfo, ref),
   }
 }
