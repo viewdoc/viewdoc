@@ -44,14 +44,14 @@ const fixUrls = (select: CheerioStatic, repoInfo: RepoInfo, ref: string) => {
   select('img').each((index, element) => {
     const image = select(element)
     const url = image.attr('src')
-    if (isRelativeUrl(url)) {
+    if (url && isRelativeUrl(url)) {
       image.attr('src', joinUrl('https://raw.githack.com', repoInfo.owner, repoInfo.repo, ref, url))
     }
   })
   select('a').each((index, element) => {
     const anchor = select(element)
     const url = anchor.attr('href')
-    if (isRelativeUrl(url)) {
+    if (url && isRelativeUrl(url)) {
       anchor.attr('href', joinUrl(repoInfo.repo, url))
     }
   })
