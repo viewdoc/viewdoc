@@ -1,8 +1,6 @@
 import { SpawnOptions } from 'child_process'
 import spawn from 'cross-spawn'
-import whichFactory from 'npm-which'
-
-const which = whichFactory(process.cwd())
+import path from 'path'
 
 export const createBinary = (command: string) => {
   const binary = createBinaryWithOptions(command)
@@ -11,7 +9,7 @@ export const createBinary = (command: string) => {
 }
 
 export const createBinaryWithOptions = (command: string) => {
-  const fullCommand = which.sync(command)
+  const fullCommand = path.join(__dirname, '../../node_modules/.bin', command)
   return (argv: string[], options?: SpawnOptions): Promise<number> => {
     console.log(`> ${command} ${argv.map((arg) => `'${arg}'`).join(' ')}`)
     return new Promise<number>((resolve, reject) => {
