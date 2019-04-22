@@ -1,0 +1,8 @@
+{
+  "extends": [
+    "config:base",
+    "group:all"
+  ],
+  "rangeStrategy": "pin",
+  "schedule": "on tuesday and thursday and saturday"
+}
