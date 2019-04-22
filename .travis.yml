@@ -1,0 +1,29 @@
+language: node_js
+node_js:
+  - lts/*
+cache: npm
+before_install:
+  - npm install -g npm
+  - git remote rm origin
+  - git remote add origin https://${GH_TOKEN}@github.com/viewdoc/viewdoc.git > /dev/null 2>&1
+  - git fetch
+  - git checkout $TRAVIS_PULL_REQUEST_BRANCH
+  - if [ $(git show -s --format='%ae') = 'github-org@viewdoc.io' ]; then 'Previous commit was from Travis.' && exit 0; fi 
+  - package_lock_changed=$(git diff master package-lock.json | wc -l)
+  - 'echo "package_lock_changed: $package_lock_changed"'
+install:
+  - npm install
+  - npm run boot -- --no-ci
+  - npm run build:dev
+  - npm run boot -- --no-ci
+script:
+  - npm run format
+after_success:
+  - if [ $package_lock_changed -eq 0 ]; then git checkout package-lock.json; fi
+  - if [ $(git diff --name-only | wc -l) -eq 0 ]; then echo 'No file changed.' && exit 0; fi
+  - git config --global user.name "viewdoc-org"
+  - git config --global user.email "github-org@viewdoc.io"
+  - git add -A
+  - "git commit -m 'dev: format code'"
+  - git push --set-upstream origin $TRAVIS_PULL_REQUEST_BRANCH
+  - echo 'Commit pushed.'
