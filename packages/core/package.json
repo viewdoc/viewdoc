@@ -1,0 +1,21 @@
+{
+  "name": "@viewdoc/core",
+  "version": "0.0.0",
+  "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/core",
+  "scripts": {
+    "clean": "vd-dev clean",
+    "build": "vd-dev build",
+    "format": "vd-dev format",
+    "postformat": "npm run tslint",
+    "tslint": "vd-dev tslint",
+    "publish:prepare": "npm run clean && npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@viewdoc/dev": "0.0.0"
+  }
+}

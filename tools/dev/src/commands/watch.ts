@@ -27,7 +27,12 @@ export const watch = async (argv: string[]): Promise<number> => {
   const watcher = chokidar.watch(packages.map((pkgPath) => path.join(pkgPath, 'src')))
   watcher.on('change', async (filePath) => {
     const pkgPath = filePath.split('src')[0]
-    await npm(['run', scriptName], { cwd: pkgPath })
+    try {
+      await npm(['run', scriptName], { cwd: pkgPath })
+    } catch (err) {
+      console.log(`${pkgPath}: '${scriptName}' failed`)
+      console.log(err)
+    }
     console.log('Done')
   })
   watcher.on('error', console.error)

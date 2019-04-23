@@ -2,6 +2,8 @@ import { SpawnOptions } from 'child_process'
 import spawn from 'cross-spawn'
 import path from 'path'
 
+const globalCommands = ['npm', 'docker']
+
 export const createBinary = (command: string) => {
   const binary = createBinaryWithOptions(command)
   // Run binary with no extra options
@@ -9,7 +11,9 @@ export const createBinary = (command: string) => {
 }
 
 export const createBinaryWithOptions = (command: string) => {
-  const fullCommand = path.join(__dirname, '../../node_modules/.bin', command)
+  const fullCommand = globalCommands.includes(command)
+    ? command
+    : path.join(__dirname, '../../node_modules/.bin', command)
   return (argv: string[], options?: SpawnOptions): Promise<number> => {
     console.log(`> ${command} ${argv.map((arg) => `'${arg}'`).join(' ')}`)
     return new Promise<number>((resolve, reject) => {

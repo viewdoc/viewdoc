@@ -8,7 +8,7 @@ before_install:
   - git remote add origin https://${GH_TOKEN}@github.com/viewdoc/viewdoc.git > /dev/null 2>&1
   - git fetch
   - git checkout $TRAVIS_PULL_REQUEST_BRANCH
-  - if [ $(git show -s --format='%ae') = 'github-org@viewdoc.io' ]; then 'Previous commit was from Travis.' && exit 0; fi 
+  - if [ $(git show -s --format='%ae') = 'github-org@viewdoc.io' ]; then echo 'Previous commit was from Travis.' && exit 0; fi 
   - package_lock_changed=$(git diff master package-lock.json | wc -l)
   - 'echo "package_lock_changed: $package_lock_changed"'
 install:
