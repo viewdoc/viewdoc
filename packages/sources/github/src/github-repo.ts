@@ -4,10 +4,10 @@ import Octokit, {
   ReposGetReadmeResponse,
   ReposGetResponse,
 } from '@octokit/rest'
-import { DocContent, DocFormat, GetDocContentOptions, GitSourceHelper, Repo } from '@viewdoc/core/lib/doc'
+import { DocContent, FormatInterface, GetDocContentOptions, RepoInterface, SourceHelper } from '@viewdoc/core/lib/doc'
 import path from 'path'
 
-const helper = new GitSourceHelper()
+const helper = new SourceHelper()
 
 export interface GithubRepoOptions {
   readonly octokit: Octokit
@@ -24,7 +24,7 @@ interface GithubFileResponse {
 
 type ReposGetContentsResponse = GithubFileResponse | GithubFileResponse[]
 
-export class GithubRepo implements Repo {
+export class GithubRepo implements RepoInterface {
   private readonly octokit: Octokit
   readonly name: string
   readonly ownerName: string
@@ -50,6 +50,17 @@ export class GithubRepo implements Repo {
       // If docPath is root, return the readme of the repo
       return this.getRepoReadmeContent(getDocContentOptions)
     }
+    const defaultExtension = '.md'
+    if (path.extname(docPath) !== defaultExtension) {
+      // Try docPath with default extension first, because it is most likely used
+      const content: DocContent | undefined = await this.getDocContent({
+        ...getDocContentOptions,
+        docPath: `${docPath}${defaultExtension}`,
+      })
+      if (content) {
+        return content
+      }
+    }
     const reposGetContents: ReposGetContentsResponse | undefined = await this.getContentsReponse({
       owner: this.ownerName,
       repo: this.name,
@@ -57,11 +68,6 @@ export class GithubRepo implements Repo {
       path: docPath,
     })
     if (!reposGetContents) {
-      // If docPath is not found, try default extension
-      const defaultExtension = '.md'
-      if (path.extname(docPath) !== defaultExtension) {
-        return this.getDocContent({ ...getDocContentOptions, docPath: `${docPath}${defaultExtension}` })
-      }
       return
     }
     if (Array.isArray(reposGetContents)) {
@@ -84,7 +90,7 @@ export class GithubRepo implements Repo {
     if (!reposGetReadme) {
       return
     }
-    const format: DocFormat | undefined = helper.findFormat(formats, reposGetReadme.name)
+    const format: FormatInterface | undefined = helper.findFormat(formats, reposGetReadme.name)
     if (!format) {
       return
     }
@@ -103,7 +109,7 @@ export class GithubRepo implements Repo {
     const { ref, formats } = getDocContentOptions
     for (const file of filesInDir) {
       if (path.parse(file.name).name.toLowerCase() === 'readme') {
-        const format: DocFormat | undefined = helper.findFormat(formats, file.name)
+        const format: FormatInterface | undefined = helper.findFormat(formats, file.name)
         if (format) {
           return helper.createDocContent({
             name: file.name,
@@ -122,7 +128,7 @@ export class GithubRepo implements Repo {
     file: GithubFileResponse,
   ): Promise<DocContent | undefined> {
     const { ref, formats } = getDocContentOptions
-    const format: DocFormat | undefined = helper.findFormat(formats, file.name)
+    const format: FormatInterface | undefined = helper.findFormat(formats, file.name)
     if (!format) {
       return
     }

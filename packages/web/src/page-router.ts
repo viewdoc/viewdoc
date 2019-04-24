@@ -1,4 +1,4 @@
-import { DocContent, DocFormat, GitSource, Repo } from '@viewdoc/core/lib/doc'
+import { DocContent, FormatInterface, RepoInterface, SourceInterface } from '@viewdoc/core/lib/doc'
 import { GithubSource } from '@viewdoc/github'
 import { MarkdownFormat } from '@viewdoc/markdown'
 import config from 'config'
@@ -9,8 +9,8 @@ interface GithubConfig {
 }
 
 const githubConfig: GithubConfig = config.get<GithubConfig>('github')
-const source: GitSource = new GithubSource({ accessToken: githubConfig.accessToken })
-const formats: DocFormat[] = [new MarkdownFormat()]
+const source: SourceInterface = new GithubSource({ accessToken: githubConfig.accessToken })
+const formats: FormatInterface[] = [new MarkdownFormat()]
 
 interface PageParams {
   ownerName: string
@@ -25,7 +25,7 @@ const handlePage = async (req: Request, res: Response, next: NextFunction) => {
     const docPath = `/${params[0] || ''}`
     const repoIdsParts = repoId.split('@')
     const repoName = repoIdsParts[0]
-    const repo: Repo | undefined = await source.getRepo({ ownerName, repoName })
+    const repo: RepoInterface | undefined = await source.getRepo({ ownerName, repoName })
     if (!repo) {
       next()
       return

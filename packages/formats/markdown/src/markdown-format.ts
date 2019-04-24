@@ -1,7 +1,7 @@
-import { DocFormat } from '@viewdoc/core/lib/doc'
+import { FormatInterface } from '@viewdoc/core/lib/doc'
 import marked from 'marked'
 
-export class MarkdownFormat implements DocFormat {
+export class MarkdownFormat implements FormatInterface {
   readonly id: string = 'markdown'
 
   // https://github.com/github/markup#markups

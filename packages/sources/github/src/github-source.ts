@@ -1,12 +1,12 @@
 import Octokit, { ReposGetParams, ReposGetResponse } from '@octokit/rest'
-import { GetRepoOptions, GitSource, Repo } from '@viewdoc/core/lib/doc'
+import { GetRepoOptions, RepoInterface, SourceInterface } from '@viewdoc/core/lib/doc'
 import { GithubRepo } from './github-repo'
 
 export interface GithubSourceOptions {
   readonly accessToken: string
 }
 
-export class GithubSource implements GitSource {
+export class GithubSource implements SourceInterface {
   readonly id: string = 'github'
 
   private readonly octokit: Octokit
@@ -15,7 +15,7 @@ export class GithubSource implements GitSource {
     this.octokit = new Octokit({ auth: options.accessToken })
   }
 
-  async getRepo (getRepoOptions: GetRepoOptions): Promise<Repo | undefined> {
+  async getRepo (getRepoOptions: GetRepoOptions): Promise<RepoInterface | undefined> {
     const { ownerName, repoName } = getRepoOptions
     const reposGet: ReposGetResponse | undefined = await this.getRepoResponse({ owner: ownerName, repo: repoName })
     if (!reposGet) {

@@ -1,20 +1,20 @@
 import path from 'path'
 import { DocContent } from './doc-content'
-import { DocFormat } from './doc-format'
+import { FormatInterface } from './format.interface'
 
 export interface CreateDocContentOptions {
   readonly name: string
   readonly path: string
-  readonly format: DocFormat
+  readonly format: FormatInterface
   readonly content: string
 }
 
-export class GitSourceHelper {
+export class SourceHelper {
   decodeBase64 (data: string): string {
     return Buffer.from(data, 'base64').toString()
   }
 
-  findFormat (formats: DocFormat[], fileName: string): DocFormat | undefined {
+  findFormat (formats: FormatInterface[], fileName: string): FormatInterface | undefined {
     const extName = path.extname(fileName).toLowerCase()
     return formats.find(({ extensions }) => extensions.includes(extName))
   }

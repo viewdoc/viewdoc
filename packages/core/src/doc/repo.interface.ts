@@ -1,13 +1,13 @@
 import { DocContent } from './doc-content'
-import { DocFormat } from './doc-format'
+import { FormatInterface } from './format.interface'
 
 export interface GetDocContentOptions {
   readonly ref: string
   readonly docPath: string
-  readonly formats: DocFormat[]
+  readonly formats: FormatInterface[]
 }
 
-export interface Repo {
+export interface RepoInterface {
   readonly name: string
   readonly ownerName: string
   readonly defaultBranch: string
