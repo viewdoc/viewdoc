@@ -15,6 +15,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@viewdoc/cache": "0.0.0",
     "@viewdoc/core": "0.0.0",
     "@viewdoc/github": "0.0.0",
     "@viewdoc/markdown": "0.0.0",

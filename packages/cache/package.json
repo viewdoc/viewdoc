@@ -1,7 +1,8 @@
 {
-  "name": "@viewdoc/core",
+  "name": "@viewdoc/cache",
   "version": "0.0.0",
-  "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/core",
+  "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/cache",
+  "main": "lib/index.js",
   "scripts": {
     "clean": "vd-dev clean",
     "build": "vd-dev build",
@@ -14,10 +15,17 @@
     "access": "public"
   },
   "dependencies": {
-    "luxon": "1.12.1"
+    "@viewdoc/core": "0.0.0",
+    "fs-extra": "7.0.1",
+    "lru-cache": "5.1.1",
+    "luxon": "1.12.1",
+    "walk": "2.3.14"
   },
   "devDependencies": {
+    "@types/fs-extra": "5.0.5",
+    "@types/lru-cache": "5.1.0",
     "@types/luxon": "1.12.0",
+    "@types/walk": "2.3.0",
     "@viewdoc/dev": "0.0.0"
   }
 }

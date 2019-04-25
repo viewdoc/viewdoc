@@ -14,5 +14,6 @@ export interface RepoInterface {
   readonly description?: string
   readonly homePage?: string
   readonly license?: string
+  getCommitRef (ref?: string): Promise<string | undefined>
   getDocContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined>
 }

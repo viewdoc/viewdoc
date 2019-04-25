@@ -2,7 +2,7 @@ import compression from 'compression'
 import express, { Express } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
-import { pageRouter } from './page-router'
+import { createPageRouter } from './page-router'
 
 const start = async () => {
   const app: Express = express()
@@ -11,7 +11,7 @@ const start = async () => {
   if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'))
   }
-  app.use(pageRouter)
+  app.use(await createPageRouter())
   app.listen(4000)
 }
 

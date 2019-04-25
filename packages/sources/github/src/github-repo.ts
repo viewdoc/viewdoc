@@ -1,9 +1,11 @@
 import Octokit, {
+  ReposGetCommitRefShaParams,
   ReposGetContentsParams,
   ReposGetReadmeParams,
   ReposGetReadmeResponse,
   ReposGetResponse,
 } from '@octokit/rest'
+import { CacheInterface } from '@viewdoc/core/lib/cache'
 import { DocContent, FormatInterface, GetDocContentOptions, RepoInterface, SourceHelper } from '@viewdoc/core/lib/doc'
 import path from 'path'
 
@@ -11,6 +13,7 @@ const helper = new SourceHelper()
 
 export interface GithubRepoOptions {
   readonly octokit: Octokit
+  readonly requestCache: CacheInterface
   readonly ownerName: string
   readonly repoName: string
   readonly reposGet: ReposGetResponse
@@ -24,8 +27,13 @@ interface GithubFileResponse {
 
 type ReposGetContentsResponse = GithubFileResponse | GithubFileResponse[]
 
+interface ReposGetCommitRefResponse {
+  sha: string
+}
+
 export class GithubRepo implements RepoInterface {
   private readonly octokit: Octokit
+  private readonly requestCache: CacheInterface
   readonly name: string
   readonly ownerName: string
   readonly defaultBranch: string
@@ -34,14 +42,27 @@ export class GithubRepo implements RepoInterface {
   readonly license?: string
 
   constructor (githubRepoOptions: GithubRepoOptions) {
-    const { octokit, ownerName, repoName, reposGet } = githubRepoOptions
+    const { octokit, requestCache, ownerName, repoName, reposGet } = githubRepoOptions
     this.octokit = octokit
+    this.requestCache = requestCache
     this.name = repoName
     this.ownerName = ownerName
     this.defaultBranch = reposGet.default_branch
     this.description = reposGet.description
     this.homePage = reposGet.homepage
     this.license = reposGet.license.key
+  }
+
+  async getCommitRef (ref?: string): Promise<string | undefined> {
+    const reposGetCommitRef: ReposGetCommitRefResponse | undefined = await this.getReposGetCommitRefResponse({
+      owner: this.ownerName,
+      repo: this.name,
+      ref: ref || this.defaultBranch,
+    })
+    if (!reposGetCommitRef) {
+      return
+    }
+    return reposGetCommitRef.sha
   }
 
   async getDocContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined> {
@@ -156,25 +177,56 @@ export class GithubRepo implements RepoInterface {
     return reposGetContents.content ? helper.decodeBase64(reposGetContents.content) : ''
   }
 
-  private async getReadmeResponse (params: ReposGetReadmeParams): Promise<ReposGetReadmeResponse | undefined> {
-    try {
-      return (await this.octokit.repos.getReadme(params)).data
-    } catch (err) {
-      if (err.status === 404) {
-        return
-      }
-      throw err
-    }
+  private getReposGetCommitRefResponse (
+    params: ReposGetCommitRefShaParams,
+  ): Promise<ReposGetCommitRefResponse | undefined> {
+    return this.requestCache.getValue(
+      `github/reposCommitRef/${params.owner}/${params.repo}/${params.ref}`,
+      async () => {
+        try {
+          return (await this.octokit.repos.getCommitRefSha(params)).data as ReposGetCommitRefResponse
+        } catch (err) {
+          if (err.status === 404) {
+            return
+          }
+          throw err
+        }
+      },
+      { minutes: 1 },
+    )
   }
 
-  private async getContentsReponse (params: ReposGetContentsParams): Promise<ReposGetContentsResponse | undefined> {
-    try {
-      return (await this.octokit.repos.getContents(params)).data
-    } catch (err) {
-      if (err.status === 404) {
-        return
-      }
-      throw err
-    }
+  private getReadmeResponse (params: ReposGetReadmeParams): Promise<ReposGetReadmeResponse | undefined> {
+    return this.requestCache.getValue(
+      `github/reposReadme/${params.owner}/${params.repo}/${params.ref}`,
+      async () => {
+        try {
+          return (await this.octokit.repos.getReadme(params)).data
+        } catch (err) {
+          if (err.status === 404) {
+            return
+          }
+          throw err
+        }
+      },
+      { hours: 6 },
+    )
+  }
+
+  private getContentsReponse (params: ReposGetContentsParams): Promise<ReposGetContentsResponse | undefined> {
+    return this.requestCache.getValue(
+      `github/reposContents/${params.owner}/${params.repo}/${params.ref}:${params.path}`,
+      async () => {
+        try {
+          return (await this.octokit.repos.getContents(params)).data
+        } catch (err) {
+          if (err.status === 404) {
+            return
+          }
+          throw err
+        }
+      },
+      { hours: 6 },
+    )
   }
 }
