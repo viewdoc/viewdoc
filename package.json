@@ -17,6 +17,6 @@
     "publish:now": "node ./scripts/dev run publish:prepare && lerna publish"
   },
   "devDependencies": {
-    "lerna": "3.13.3"
+    "lerna": "3.13.4"
   }
 }
