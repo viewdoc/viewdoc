@@ -1,3 +1,4 @@
+import { AsciidocFormat } from '@viewdoc/asciidoc'
 import { FileBasedCache } from '@viewdoc/cache'
 import { CacheInterface } from '@viewdoc/core/lib/cache'
 import { DocContent, FormatInterface, RepoInterface, SourceInterface } from '@viewdoc/core/lib/doc'
@@ -83,7 +84,7 @@ export const createPageRouter = async () => {
     cleanDirEvery: { hours: 1 },
   })
   await cache.start()
-  const formats: FormatInterface[] = [new MarkdownFormat()]
+  const formats: FormatInterface[] = [new MarkdownFormat(), new AsciidocFormat()]
   const githubPageHandler = createPageHandler(
     new GithubSource({ accessToken: githubConfig.accessToken, cache }),
     formats,

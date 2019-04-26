@@ -24,6 +24,7 @@ script:
 after_success:
   - if [ $package_lock_changed -eq 0 ]; then git checkout package-lock.json; fi
   - if [ $(git diff --name-only | wc -l) -eq 0 ]; then echo 'No file changed.' && exit 0; fi
+  - if [ $TRAVIS_PULL_REQUEST = 'false' ]; then echo 'Master branch build with file changed.' && exit 1; fi
   - git config --global user.name "viewdoc-org"
   - git config --global user.email "github-org@viewdoc.io"
   - git add -A
