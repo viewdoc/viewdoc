@@ -7,13 +7,17 @@ export interface GetDocContentOptions {
   readonly formats: FormatInterface[]
 }
 
-export interface RepoInterface {
-  readonly name: string
-  readonly ownerName: string
+export interface RepoInfo {
+  readonly owner: string
+  readonly repo: string
   readonly defaultBranch: string
   readonly description?: string
   readonly homePage?: string
   readonly license?: string
+}
+
+export interface RepoInterface {
+  readonly info: RepoInfo
   getCommitRef (ref?: string): Promise<string | undefined>
   getDocContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined>
 }

@@ -1,8 +1,8 @@
 import { RepoInterface } from './repo.interface'
 
 export interface GetRepoOptions {
-  readonly ownerName: string
-  readonly repoName: string
+  readonly owner: string
+  readonly repo: string
 }
 
 export interface SourceInterface {

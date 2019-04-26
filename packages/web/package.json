@@ -15,11 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@viewdoc/asciidoc": "0.0.0",
-    "@viewdoc/cache": "0.0.0",
-    "@viewdoc/core": "0.0.0",
-    "@viewdoc/github": "0.0.0",
-    "@viewdoc/markdown": "0.0.0",
+    "@viewdoc/api": "0.0.0",
     "compression": "1.7.4",
     "config": "3.1.0",
     "express": "4.16.4",

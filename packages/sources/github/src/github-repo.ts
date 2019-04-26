@@ -6,7 +6,14 @@ import Octokit, {
   ReposGetResponse,
 } from '@octokit/rest'
 import { CacheInterface } from '@viewdoc/core/lib/cache'
-import { DocContent, FormatInterface, GetDocContentOptions, RepoInterface, SourceHelper } from '@viewdoc/core/lib/doc'
+import {
+  DocContent,
+  FormatInterface,
+  GetDocContentOptions,
+  RepoInfo,
+  RepoInterface,
+  SourceHelper,
+} from '@viewdoc/core/lib/doc'
 import path from 'path'
 
 const helper = new SourceHelper()
@@ -14,8 +21,8 @@ const helper = new SourceHelper()
 export interface GithubRepoOptions {
   readonly octokit: Octokit
   readonly requestCache: CacheInterface
-  readonly ownerName: string
-  readonly repoName: string
+  readonly owner: string
+  readonly repo: string
   readonly reposGet: ReposGetResponse
 }
 
@@ -34,30 +41,27 @@ interface ReposGetCommitRefResponse {
 export class GithubRepo implements RepoInterface {
   private readonly octokit: Octokit
   private readonly requestCache: CacheInterface
-  readonly name: string
-  readonly ownerName: string
-  readonly defaultBranch: string
-  readonly description?: string
-  readonly homePage?: string
-  readonly license?: string
+  readonly info: RepoInfo
 
   constructor (githubRepoOptions: GithubRepoOptions) {
-    const { octokit, requestCache, ownerName, repoName, reposGet } = githubRepoOptions
+    const { octokit, requestCache, owner, repo, reposGet } = githubRepoOptions
     this.octokit = octokit
     this.requestCache = requestCache
-    this.name = repoName
-    this.ownerName = ownerName
-    this.defaultBranch = reposGet.default_branch
-    this.description = reposGet.description
-    this.homePage = reposGet.homepage
-    this.license = reposGet.license.key
+    this.info = {
+      owner,
+      repo,
+      defaultBranch: reposGet.default_branch,
+      description: reposGet.description,
+      homePage: reposGet.homepage,
+      license: reposGet.license.key,
+    }
   }
 
   async getCommitRef (ref?: string): Promise<string | undefined> {
     const reposGetCommitRef: ReposGetCommitRefResponse | undefined = await this.getReposGetCommitRefResponse({
-      owner: this.ownerName,
-      repo: this.name,
-      ref: ref || this.defaultBranch,
+      owner: this.info.owner,
+      repo: this.info.repo,
+      ref: ref || this.info.defaultBranch,
     })
     if (!reposGetCommitRef) {
       return
@@ -83,8 +87,8 @@ export class GithubRepo implements RepoInterface {
       }
     }
     const reposGetContents: ReposGetContentsResponse | undefined = await this.getContentsReponse({
-      owner: this.ownerName,
-      repo: this.name,
+      owner: this.info.owner,
+      repo: this.info.repo,
       ref,
       path: docPath,
     })
@@ -104,8 +108,8 @@ export class GithubRepo implements RepoInterface {
   private async getRepoReadmeContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined> {
     const { ref, formats } = getDocContentOptions
     const reposGetReadme: ReposGetReadmeResponse | undefined = await this.getReadmeResponse({
-      owner: this.ownerName,
-      repo: this.name,
+      owner: this.info.owner,
+      repo: this.info.repo,
       ref,
     })
     if (!reposGetReadme) {
@@ -166,8 +170,8 @@ export class GithubRepo implements RepoInterface {
       return helper.decodeBase64(file.content)
     }
     const reposGetContents: ReposGetContentsResponse | undefined = await this.getContentsReponse({
-      owner: this.ownerName,
-      repo: this.name,
+      owner: this.info.owner,
+      repo: this.info.repo,
       ref,
       path: file.path,
     })

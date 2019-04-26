@@ -1,0 +1,29 @@
+{
+  "name": "@viewdoc/api",
+  "version": "0.0.0",
+  "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/api",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "vd-dev clean",
+    "build": "vd-dev build",
+    "format": "vd-dev format",
+    "postformat": "npm run tslint",
+    "tslint": "vd-dev tslint",
+    "publish:prepare": "npm run clean && npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@viewdoc/asciidoc": "0.0.0",
+    "@viewdoc/cache": "0.0.0",
+    "@viewdoc/core": "0.0.0",
+    "@viewdoc/github": "0.0.0",
+    "@viewdoc/markdown": "0.0.0",
+    "luxon": "1.12.1"
+  },
+  "devDependencies": {
+    "@types/luxon": "1.12.0",
+    "@viewdoc/dev": "0.0.0"
+  }
+}

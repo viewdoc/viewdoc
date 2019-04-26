@@ -21,12 +21,12 @@ export class GithubSource implements SourceInterface {
   }
 
   async getRepo (getRepoOptions: GetRepoOptions): Promise<RepoInterface | undefined> {
-    const { ownerName, repoName } = getRepoOptions
-    const reposGet: ReposGetResponse | undefined = await this.getRepoResponse({ owner: ownerName, repo: repoName })
+    const { owner, repo } = getRepoOptions
+    const reposGet: ReposGetResponse | undefined = await this.getRepoResponse({ owner, repo })
     if (!reposGet) {
       return
     }
-    return new GithubRepo({ octokit: this.octokit, requestCache: this.requestCache, ownerName, repoName, reposGet })
+    return new GithubRepo({ octokit: this.octokit, requestCache: this.requestCache, owner, repo, reposGet })
   }
 
   private getRepoResponse (params: ReposGetParams): Promise<ReposGetResponse | undefined> {
