@@ -120,6 +120,7 @@ export class GithubRepo implements RepoInterface {
       return
     }
     return helper.createDocContent({
+      info: this.info,
       name: reposGetReadme.name,
       path: reposGetReadme.path,
       format,
@@ -137,6 +138,7 @@ export class GithubRepo implements RepoInterface {
         const format: FormatInterface | undefined = helper.findFormat(formats, file.name)
         if (format) {
           return helper.createDocContent({
+            info: this.info,
             name: file.name,
             path: file.path,
             format,
@@ -158,6 +160,7 @@ export class GithubRepo implements RepoInterface {
       return
     }
     return helper.createDocContent({
+      info: this.info,
       name: file.name,
       path: file.path,
       format,

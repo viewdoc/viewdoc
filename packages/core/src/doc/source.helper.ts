@@ -1,8 +1,10 @@
 import path from 'path'
 import { DocContent } from './doc-content'
 import { FormatInterface } from './format.interface'
+import { RepoInfo } from './repo-info'
 
 export interface CreateDocContentOptions {
+  readonly info: RepoInfo
   readonly name: string
   readonly path: string
   readonly format: FormatInterface
@@ -20,21 +22,12 @@ export class SourceHelper {
   }
 
   async createDocContent (createDocContentOptions: CreateDocContentOptions): Promise<DocContent> {
-    const { name, format, content } = createDocContentOptions
+    const { info, name, format, content } = createDocContentOptions
     const body = await format.getHtmlContent(content)
     return {
+      info,
       name,
       path: createDocContentOptions.path,
-      stylesheets: [
-        'https://rawcdn.githack.com/mblode/marx/49921073cbb2e01d50a9cc66164c5e5cc0abec97/css/marx.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/toolbar/prism-toolbar.min.css',
-      ],
-      scripts: [
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/toolbar/prism-toolbar.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js',
-      ],
       body: `<main>${body}</main>`,
     }
   }

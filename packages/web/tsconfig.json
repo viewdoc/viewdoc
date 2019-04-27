@@ -1,11 +1,33 @@
 {
-  "extends": "./node_modules/@viewdoc/dev/tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "lib"
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": []
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "lib": [
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "types": [
+      "@types/node",
+      "@nuxt/vue-app"
+    ]
+  }
 }

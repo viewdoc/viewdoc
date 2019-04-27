@@ -1,0 +1,8 @@
+{
+  "extends": "./node_modules/@viewdoc/dev/tsconfig.json",
+  "include": [
+    "src/**/*",
+    "nuxt.config.ts"
+  ],
+  "exclude": []
+}
