@@ -2,6 +2,7 @@
   "name": "@viewdoc/core",
   "version": "0.0.0",
   "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/core",
+  "license": "MIT",
   "scripts": {
     "clean": "vd-dev clean",
     "build": "vd-dev build",

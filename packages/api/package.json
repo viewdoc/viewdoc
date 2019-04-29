@@ -2,6 +2,7 @@
   "name": "@viewdoc/api",
   "version": "0.0.0",
   "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/api",
+  "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
     "clean": "vd-dev clean",
