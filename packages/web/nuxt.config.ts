@@ -29,6 +29,12 @@ const nuxtConfig: NuxtConfiguration = {
   },
   build: {
     extractCSS: true,
+    typescript: {
+      typeCheck: {
+        // Only check src files
+        reportFiles: ['src/**/*.{ts,tsx}'],
+      },
+    },
   },
 }
 
