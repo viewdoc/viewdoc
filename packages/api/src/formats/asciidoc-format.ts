@@ -1,7 +1,5 @@
-import asciiDoctorFactory from '@asciidoctor/core'
 import { FormatInterface } from '@viewdoc/core/lib/doc'
-
-const asciiDoctor = asciiDoctorFactory()
+import { MarkupService } from './markup-service'
 
 export class AsciidocFormat implements FormatInterface {
   readonly id: string = 'asciidoc'
@@ -9,7 +7,9 @@ export class AsciidocFormat implements FormatInterface {
   // https://github.com/github/markup#markups
   readonly extensions: string[] = ['.asc', '.adoc', '.asciidoc']
 
-  async getHtmlContent (asciidocContent: string): Promise<string> {
-    return asciiDoctor.convert(asciidocContent, { safe: 'secure', attributes: { showtitle: true } })
+  constructor (private readonly markupService: MarkupService) {}
+
+  getHtmlContent (asciidocContent: string): Promise<string> {
+    return this.markupService.convertToHtml(asciidocContent, this.id)
   }
 }

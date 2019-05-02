@@ -1,5 +1,5 @@
 import { FormatInterface } from '@viewdoc/core/lib/doc'
-import marked from 'marked'
+import { MarkupService } from './markup-service'
 
 export class MarkdownFormat implements FormatInterface {
   readonly id: string = 'markdown'
@@ -7,7 +7,9 @@ export class MarkdownFormat implements FormatInterface {
   // https://github.com/github/markup#markups
   readonly extensions: string[] = ['.md', '.mkdn', '.mdown', '.markdown']
 
-  async getHtmlContent (markdownContent: string): Promise<string> {
-    return marked(markdownContent, { gfm: true, mangle: false })
+  constructor (private readonly markupService: MarkupService) {}
+
+  getHtmlContent (markdownContent: string): Promise<string> {
+    return this.markupService.convertToHtml(markdownContent, this.id)
   }
 }

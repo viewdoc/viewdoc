@@ -8,6 +8,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 
 const api = new ViewDocApi({
+  markupService: config.get('markupService'),
   cache: config.get('cache'),
   github: config.get('github'),
 })

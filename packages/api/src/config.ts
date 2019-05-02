@@ -10,7 +10,12 @@ export interface GithubConfig {
   accessToken: string
 }
 
+export interface MarkupServiceConfig {
+  baseUrl: string
+}
+
 export interface ApiConfig {
   cache: CacheConfig
   github: GithubConfig
+  markupService: MarkupServiceConfig
 }

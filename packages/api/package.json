@@ -16,14 +16,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@viewdoc/asciidoc": "0.0.0",
     "@viewdoc/cache": "0.0.0",
     "@viewdoc/core": "0.0.0",
     "@viewdoc/github": "0.0.0",
-    "@viewdoc/markdown": "0.0.0",
+    "axios": "0.18.0",
     "luxon": "1.12.1"
   },
   "devDependencies": {
+    "@types/axios": "0.14.0",
     "@types/luxon": "1.12.0",
     "@viewdoc/dev": "0.0.0"
   }
