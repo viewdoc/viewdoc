@@ -37,6 +37,10 @@ export default class DocPage extends Vue {
   }
 
   render () {
-    return <div domProps={{ innerHTML: this.pageContent.body }}/>
+    return (
+      <main>
+        <article domProps={{ innerHTML: this.pageContent.body }}/>
+      </main>
+    )
   }
 }

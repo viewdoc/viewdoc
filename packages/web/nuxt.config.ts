@@ -19,14 +19,8 @@ const nuxtConfig: NuxtConfiguration = {
         content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui',
       },
     ],
-    link: [
-      {
-        href: 'https://rawcdn.githack.com/mblode/marx/49921073cbb2e01d50a9cc66164c5e5cc0abec97/css/marx.min.css',
-        type: 'text/css',
-        rel: 'stylesheet',
-      },
-    ],
   },
+  css: ['@viewdoc/styles/viewdoc-styles.css'],
   build: {
     extractCSS: true,
     typescript: {

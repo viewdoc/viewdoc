@@ -28,7 +28,7 @@ export class SourceHelper {
       info,
       name,
       path: createDocContentOptions.path,
-      body: `<main>${body}</main>`,
+      body,
     }
   }
 }

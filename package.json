@@ -14,7 +14,8 @@
     "prewatch": "npm run build",
     "check:deps": "node ./scripts/dev checkdeps",
     "publish:try": "node ./scripts/dev run publish:prepare && lerna version --no-push",
-    "publish:now": "node ./scripts/dev run publish:prepare && lerna publish"
+    "publish:now": "node ./scripts/dev run publish:prepare && lerna publish",
+    "markup": "docker run -it -p 4100:3000 viewdoc/markup"
   },
   "devDependencies": {
     "lerna": "3.13.4"
