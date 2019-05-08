@@ -15,7 +15,7 @@
     "access": "public"
   },
   "dependencies": {
-    "luxon": "1.12.1"
+    "luxon": "1.13.0"
   },
   "devDependencies": {
     "@types/luxon": "1.12.0",
