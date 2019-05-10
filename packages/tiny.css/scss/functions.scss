@@ -1,0 +1,16 @@
+// https://gist.github.com/hail2u/1964056
+// pow() - Raise number to the nth power
+//
+// @param {number} $base      The base number
+// @param {number} $exponents The exponent to which to raise $base
+@function pow ($base, $exponents) {
+  $raised: 1;
+
+  @if $exponents > 0 {
+    @for $i from 1 through $exponents {
+      $raised: $raised * $base;
+    }
+  }
+
+  @return $raised;
+}

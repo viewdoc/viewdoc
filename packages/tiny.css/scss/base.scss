@@ -1,0 +1,159 @@
+@import "./variables.scss";
+@import "./functions.scss";
+
+html {
+  font-family: $text-font;
+  font-size: $base-font-size;
+  line-height: $line-height;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+  margin: 0;
+}
+
+main {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: $spacing-scale * 1.5 + rem;
+}
+
+h1, h2, h3, h4, h5, h6, p, hr, ul, ol, blockquote {
+  margin: ($spacing-scale + rem) 0;
+}
+
+h1 { font-size: pow($base-font-scale, 5) + rem; }
+h2 { font-size: pow($base-font-scale, 4) + rem; }
+h3 { font-size: pow($base-font-scale, 3) + rem; }
+h4 { font-size: pow($base-font-scale, 2) + rem; }
+h5 { font-size: pow($base-font-scale, 1) + rem; }
+h6 { font-size: pow($base-font-scale, 0) + rem; }
+
+pre, code, kbd, samp {
+  font-family: $code-font;
+}
+
+pre {
+  overflow-x: auto;
+  padding: $spacing-scale + rem;
+}
+
+code, kbd, samp, mark {
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+pre code {
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+hr {
+  height: 2px;
+  border: 0;
+}
+
+blockquote, th, td {
+  padding: ($spacing-scale / 4 + rem) ($spacing-scale + rem);
+}
+
+blockquote {
+  border-left: 3px solid;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+dd {
+  padding: 0 ($spacing-scale + rem);
+}
+
+dd+dt {
+  padding-top: $spacing-scale / 2 + rem;
+}
+
+small, th, dt {
+  font-weight: 600;
+}
+
+ul {
+  list-style-type: disc;
+  ul {
+    list-style-type: square;
+    margin-top: $spacing-scale / 2 + rem;
+    ul {
+      list-style-type: circle;
+    }
+  }
+}
+
+ol {
+  list-style-type: decimal;
+  ol {
+    list-style-type: lower-alpha;
+    margin-top: $spacing-scale / 2 + rem;
+    ol {
+      list-style-type: lower-roman;
+    }
+  }
+}
+
+img, embed, iframe, object, video {
+  max-width: 100%;
+  height: auto;
+}
+
+audio {
+  max-width: 100%;
+}
+
+figure {
+  text-align: center
+}
+
+table {
+  font-size: $base-font-size;
+  line-height: $line-height;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+thead th {
+  border-bottom: 2px solid;
+}
+
+tfoot th {
+  border-top: 2px solid;
+}
+
+input, select, textarea {
+  font-family: $text-font;
+  font-size: $base-font-size;
+  padding: 3px 6px;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 3px solid;
+}
+
+input[type=submit], input[type=button], input[type=reset], button {
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+  padding: $spacing-scale / 2 + rem;
+  border-radius: 6px;
+}
+
+input[type=submit][disabled], input[type=button][disabled], input[type=reset][disabled], button[disabled] {
+  cursor: not-allowed;
+}

@@ -1,5 +1,6 @@
 import { Context } from '@nuxt/vue-app'
 import { DocContent, DocPageParams } from '@viewdoc/core/lib/doc'
+import { createTheme } from '@viewdoc/tiny.css'
 import axios from 'axios'
 import { Component, Vue } from 'nuxt-property-decorator'
 import { MetaInfo } from 'vue-meta'
@@ -33,14 +34,15 @@ export default class DocPage extends Vue {
     const title = `${info.owner}/${info.repo}${info.description ? `: ${info.description}` : ''}`
     return {
       title,
+      style: [
+        { cssText: createTheme('light'), type: 'text/css' },
+      ],
     }
   }
 
   render () {
     return (
-      <main>
-        <article domProps={{ innerHTML: this.pageContent.body }}/>
-      </main>
+      <main domProps={{ innerHTML: this.pageContent.body }}/>
     )
   }
 }

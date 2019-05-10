@@ -18,7 +18,7 @@
   "dependencies": {
     "@viewdoc/api": "0.0.0",
     "@viewdoc/core": "0.0.0",
-    "@viewdoc/styles": "0.1.0",
+    "@viewdoc/tiny.css": "0.0.0",
     "axios": "0.18.0",
     "body-parser": "1.19.0",
     "compression": "1.7.4",
@@ -40,6 +40,8 @@
     "@types/helmet": "0.0.43",
     "@types/morgan": "1.7.35",
     "@viewdoc/dev": "0.0.0",
-    "nuxt": "2.6.3"
+    "nuxt": "2.6.3",
+    "sass": "^1.20.1",
+    "sass-loader": "^7.1.0"
   }
 }

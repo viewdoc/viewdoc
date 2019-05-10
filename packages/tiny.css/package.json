@@ -1,0 +1,34 @@
+{
+  "name": "@viewdoc/tiny.css",
+  "version": "0.0.0",
+  "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/tiny.css",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "vd-dev clean",
+    "build": "vd-dev build && node ./generate-themes && npm run build:css",
+    "clean:css": "rimraf dist",
+    "build:css": "parcel build scss/index.html scss/base.scss --no-source-maps",
+    "prebuild:css": "npm run clean:css",
+    "postbuild:css": "npm run copy:light && npm run copy:dark && ls -l dist/*.css",
+    "copy:light": "ncp dist/$(ls dist | grep tiny-light | grep .css$) dist/tiny-light.css",
+    "copy:dark": "ncp dist/$(ls dist | grep tiny-dark | grep .css$) dist/tiny-dark.css",
+    "format": "vd-dev format",
+    "postformat": "npm run tslint && npm run eslint",
+    "tslint": "vd-dev tslint",
+    "eslint": "vd-dev eslint --ignore-pattern /dist/",
+    "publish:prepare": "npm run clean && npm run build",
+    "dev": "vd-dev build && node ./generate-themes && npm run clean:css && parcel scss/index.html"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@viewdoc/dev": "0.0.0",
+    "fs-extra": "^7.0.1",
+    "ncp": "2.0.0",
+    "parcel-bundler": "1.12.3",
+    "rimraf": "2.6.3",
+    "sass": "1.20.1"
+  }
+}

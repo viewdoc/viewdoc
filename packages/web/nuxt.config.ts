@@ -1,5 +1,6 @@
 import NuxtConfiguration from '@nuxt/config'
 import path from 'path'
+import sass from 'sass'
 
 const nuxtConfig: NuxtConfiguration = {
   rootDir: __dirname,
@@ -20,13 +21,18 @@ const nuxtConfig: NuxtConfiguration = {
       },
     ],
   },
-  css: ['@viewdoc/styles/viewdoc-styles.css'],
+  css: [path.join(__dirname, 'src/assets/main.scss')],
   build: {
     extractCSS: true,
     typescript: {
       typeCheck: {
         // Only check src files
         reportFiles: ['src/**/*.{ts,tsx}'],
+      },
+    },
+    loaders: {
+      scss: {
+        implementation: sass,
       },
     },
   },
