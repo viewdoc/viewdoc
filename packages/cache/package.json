@@ -19,7 +19,7 @@
     "@viewdoc/core": "0.0.0",
     "fs-extra": "7.0.1",
     "lru-cache": "5.1.1",
-    "luxon": "1.13.1",
+    "luxon": "1.13.2",
     "walk": "2.3.14"
   },
   "devDependencies": {
