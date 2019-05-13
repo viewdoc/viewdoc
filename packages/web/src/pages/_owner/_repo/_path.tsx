@@ -30,8 +30,8 @@ export default class DocPage extends Vue {
   private readonly pageContent!: DocContent
 
   head (): MetaInfo {
-    const { info } = this.pageContent
-    const title = `${info.owner}/${info.repo}${info.description ? `: ${info.description}` : ''}`
+    const { info, siteConfig } = this.pageContent
+    const title = siteConfig && siteConfig.title || `${info.owner}/${info.repo}${info.description ? `: ${info.description}` : ''}`
     return {
       title,
       style: [

@@ -1,4 +1,6 @@
+import jsYaml from 'js-yaml'
 import path from 'path'
+import { SiteConfig } from '../site-config'
 import { DocContent } from './doc-content'
 import { FormatInterface } from './format.interface'
 import { RepoInfo } from './repo-info'
@@ -9,6 +11,7 @@ export interface CreateDocContentOptions {
   readonly path: string
   readonly format: FormatInterface
   readonly content: string
+  readonly siteConfig?: SiteConfig
 }
 
 export class SourceHelper {
@@ -22,13 +25,18 @@ export class SourceHelper {
   }
 
   async createDocContent (createDocContentOptions: CreateDocContentOptions): Promise<DocContent> {
-    const { info, name, format, content } = createDocContentOptions
+    const { info, name, format, content, siteConfig } = createDocContentOptions
     const body = await format.getHtmlContent(content)
     return {
       info,
       name,
       path: createDocContentOptions.path,
       body,
+      siteConfig,
     }
+  }
+
+  parseConfig (siteConfigContent: string): SiteConfig {
+    return jsYaml.safeLoad(siteConfigContent)
   }
 }

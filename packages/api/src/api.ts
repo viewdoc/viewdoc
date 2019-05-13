@@ -1,6 +1,7 @@
 import { FileBasedCache } from '@viewdoc/cache'
 import { CacheInterface } from '@viewdoc/core/lib/cache'
 import { DocContent, DocPageParams, FormatInterface, RepoInterface, SourceInterface } from '@viewdoc/core/lib/doc'
+import { SiteConfig } from '@viewdoc/core/lib/doc/site-config'
 import { GithubSource } from '@viewdoc/github'
 import { DateTime } from 'luxon'
 import { ApiConfig } from './config'
@@ -40,7 +41,13 @@ export class ViewDocApi {
     if (!ref) {
       return
     }
-    const docContent: DocContent | undefined = await repo.getDocContent({ ref, docPath, formats: this.formats })
+    const siteConfig: SiteConfig | undefined = await repo.getSiteConfig(ref, '.viewdoc-config')
+    const docContent: DocContent | undefined = await repo.getDocContent({
+      ref,
+      docPath,
+      formats: this.formats,
+      siteConfig,
+    })
     return docContent
   }
 

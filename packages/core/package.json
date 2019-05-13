@@ -15,9 +15,11 @@
     "access": "public"
   },
   "dependencies": {
+    "js-yaml": "3.13.1",
     "luxon": "1.13.2"
   },
   "devDependencies": {
+    "@types/js-yaml": "3.12.1",
     "@types/luxon": "1.12.0",
     "@viewdoc/dev": "0.0.0"
   }

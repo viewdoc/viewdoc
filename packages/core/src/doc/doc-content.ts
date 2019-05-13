@@ -1,3 +1,4 @@
+import { SiteConfig } from '../site-config'
 import { RepoInfo } from './repo-info'
 
 export interface DocContent {
@@ -5,4 +6,5 @@ export interface DocContent {
   readonly name: string
   readonly path: string
   readonly body: string
+  readonly siteConfig?: SiteConfig
 }

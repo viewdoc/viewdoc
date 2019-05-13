@@ -14,6 +14,7 @@ import {
   RepoInterface,
   SourceHelper,
 } from '@viewdoc/core/lib/doc'
+import { SiteConfig } from '@viewdoc/core/lib/site-config'
 import path from 'path'
 
 const helper = new SourceHelper()
@@ -105,8 +106,24 @@ export class GithubRepo implements RepoInterface {
     return this.getFile(getDocContentOptions, file)
   }
 
+  async getSiteConfig (ref: string, siteConfigPath: string): Promise<SiteConfig | undefined> {
+    const reposGetContents: ReposGetContentsResponse | undefined = await this.getContentsReponse({
+      owner: this.info.owner,
+      repo: this.info.repo,
+      ref,
+      path: siteConfigPath,
+    })
+    if (!reposGetContents || Array.isArray(reposGetContents)) {
+      return
+    }
+    const file: GithubFileResponse = reposGetContents
+    const siteConfigContent: string = await this.getFileContent(ref, file)
+    const siteConfig: SiteConfig = helper.parseConfig(siteConfigContent)
+    return siteConfig
+  }
+
   private async getRepoReadmeContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined> {
-    const { ref, formats } = getDocContentOptions
+    const { ref, formats, siteConfig } = getDocContentOptions
     const reposGetReadme: ReposGetReadmeResponse | undefined = await this.getReadmeResponse({
       owner: this.info.owner,
       repo: this.info.repo,
@@ -125,6 +142,7 @@ export class GithubRepo implements RepoInterface {
       path: reposGetReadme.path,
       format,
       content: helper.decodeBase64(reposGetReadme.content),
+      siteConfig,
     })
   }
 
@@ -132,7 +150,7 @@ export class GithubRepo implements RepoInterface {
     getDocContentOptions: GetDocContentOptions,
     filesInDir: GithubFileResponse[],
   ): Promise<DocContent | undefined> {
-    const { ref, formats } = getDocContentOptions
+    const { ref, formats, siteConfig } = getDocContentOptions
     for (const file of filesInDir) {
       if (path.parse(file.name).name.toLowerCase() === 'readme') {
         const format: FormatInterface | undefined = helper.findFormat(formats, file.name)
@@ -143,6 +161,7 @@ export class GithubRepo implements RepoInterface {
             path: file.path,
             format,
             content: await this.getFileContent(ref, file),
+            siteConfig,
           })
         }
       }
@@ -154,7 +173,7 @@ export class GithubRepo implements RepoInterface {
     getDocContentOptions: GetDocContentOptions,
     file: GithubFileResponse,
   ): Promise<DocContent | undefined> {
-    const { ref, formats } = getDocContentOptions
+    const { ref, formats, siteConfig } = getDocContentOptions
     const format: FormatInterface | undefined = helper.findFormat(formats, file.name)
     if (!format) {
       return
@@ -165,6 +184,7 @@ export class GithubRepo implements RepoInterface {
       path: file.path,
       format,
       content: await this.getFileContent(ref, file),
+      siteConfig,
     })
   }
 
