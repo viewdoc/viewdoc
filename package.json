@@ -18,6 +18,6 @@
     "markup": "docker run -it -p 4100:3000 viewdoc/markup:0.1.1"
   },
   "devDependencies": {
-    "lerna": "3.13.4"
+    "lerna": "3.14.0"
   }
 }
