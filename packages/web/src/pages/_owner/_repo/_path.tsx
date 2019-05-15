@@ -32,10 +32,12 @@ export default class DocPage extends Vue {
   head (): MetaInfo {
     const { info, siteConfig } = this.pageContent
     const title = siteConfig && siteConfig.title || `${info.owner}/${info.repo}${info.description ? `: ${info.description}` : ''}`
+    const themeBase = siteConfig && siteConfig.theme && siteConfig.theme.base || 'light'
+    const themeOptions = siteConfig && siteConfig.theme && siteConfig.theme.options
     return {
       title,
       style: [
-        { cssText: createTheme('light'), type: 'text/css' },
+        { cssText: createTheme(themeBase, themeOptions), type: 'text/css' },
       ],
     }
   }

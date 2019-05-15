@@ -15,7 +15,7 @@
     "check:deps": "node ./scripts/dev checkdeps",
     "publish:try": "node ./scripts/dev run publish:prepare && lerna version --no-push",
     "publish:now": "node ./scripts/dev run publish:prepare && lerna publish",
-    "markup": "docker run -it -p 4100:3000 viewdoc/markup"
+    "markup": "docker run -it -p 4100:3000 viewdoc/markup:0.1.1"
   },
   "devDependencies": {
     "lerna": "3.13.4"
