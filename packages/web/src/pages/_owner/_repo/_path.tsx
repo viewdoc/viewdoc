@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/vue-app'
-import { DocContent, DocPageParams } from '@viewdoc/core/lib/doc'
-import { createTheme } from '@viewdoc/tiny.css'
+import { DocContent, DocPageParams } from '@viewdoc/core/es6/doc'
+import { createTheme } from '@viewdoc/tiny.css/es6'
 import axios from 'axios'
 import { Component, Vue } from 'nuxt-property-decorator'
 import { MetaInfo } from 'vue-meta'

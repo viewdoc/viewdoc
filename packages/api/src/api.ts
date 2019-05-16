@@ -1,22 +1,11 @@
 import { FileBasedCache } from '@viewdoc/cache'
 import { CacheInterface } from '@viewdoc/core/lib/cache'
 import { DocContent, DocPageParams, FormatInterface, RepoInterface, SourceInterface } from '@viewdoc/core/lib/doc'
-import { SiteConfig } from '@viewdoc/core/lib/doc/site-config'
+import { SiteConfig } from '@viewdoc/core/lib/site-config'
 import { GithubSource } from '@viewdoc/github'
 import { DateTime } from 'luxon'
 import { ApiConfig } from './config'
-import {
-  AsciidocFormat,
-  CreoleFormat,
-  MarkdownFormat,
-  MarkupService,
-  MediawikiFormat,
-  OrgFormat,
-  PodFormat,
-  RdocFormat,
-  RstFormat,
-  TextileFormat,
-} from './formats'
+import { createFormats, MarkupService } from './formats'
 
 export class ViewDocApi {
   private ready: boolean = false
@@ -65,17 +54,7 @@ export class ViewDocApi {
     await cache.start()
     const markupService: MarkupService = new MarkupService(this.config.markupService)
     this.sources.push(new GithubSource({ ...this.config.github, cache }))
-    this.formats.push(
-      new AsciidocFormat(markupService),
-      new CreoleFormat(markupService),
-      new MarkdownFormat(markupService),
-      new MediawikiFormat(markupService),
-      new OrgFormat(markupService),
-      new PodFormat(markupService),
-      new RdocFormat(markupService),
-      new RstFormat(markupService),
-      new TextileFormat(markupService),
-    )
+    this.formats.push(...createFormats(markupService))
     this.ready = true
   }
 }

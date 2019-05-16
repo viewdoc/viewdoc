@@ -16,7 +16,8 @@ html {
 main {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: $spacing-scale * 1.5 + rem;
+  padding: $spacing-scale * 2 + rem;
+  overflow-wrap: break-word;
 }
 
 h1, h2, h3, h4, h5, h6, p, hr, ul, ol, blockquote {
@@ -122,8 +123,8 @@ figure {
 table {
   font-size: $base-font-size;
   line-height: $line-height;
+  table-layout: fixed;
   width: 100%;
-  overflow-x: auto;
   border-collapse: collapse;
   border-spacing: 0;
 }

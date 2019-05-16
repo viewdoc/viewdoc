@@ -1,3 +1,4 @@
+import { HtmlContent } from '@viewdoc/core/lib/doc'
 import axios, { AxiosInstance } from 'axios'
 import { MarkupServiceConfig } from '../config'
 
@@ -9,7 +10,7 @@ export class MarkupService {
     this.client = axios.create({ baseURL: baseUrl })
   }
 
-  async convertToHtml (content: string, formatId: string): Promise<string> {
-    return (await this.client.post<string>(formatId, content)).data
+  async convertToHtml (content: string, formatId: string): Promise<HtmlContent> {
+    return (await this.client.post<HtmlContent>(formatId, content)).data
   }
 }

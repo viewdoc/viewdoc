@@ -26,17 +26,18 @@ export class SourceHelper {
 
   async createDocContent (createDocContentOptions: CreateDocContentOptions): Promise<DocContent> {
     const { info, name, format, content, siteConfig } = createDocContentOptions
-    const body = await format.getHtmlContent(content)
+    const { toc, output: body } = await format.getHtmlContent(content)
     return {
       info,
       name,
       path: createDocContentOptions.path,
+      toc,
       body,
       siteConfig,
     }
   }
 
-  parseConfig (siteConfigContent: string): SiteConfig {
+  parseSiteConfig (siteConfigContent: string): SiteConfig {
     return jsYaml.safeLoad(siteConfigContent)
   }
 }

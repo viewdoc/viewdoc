@@ -1,27 +1,24 @@
 export interface Theme {
   primaryColor?: string
   backgroundColor?: string
-  foregroundColor?: string
   alternativeBackgroundColor?: string
-  alternativeForegroundColor?: string
+  foregroundColor?: string
 }
 
 export type BaseThemeName = 'light' | 'dark'
 
 export const baseThemes: Record<BaseThemeName, Theme> = {
   light: {
-    primaryColor: '#DA6741',
+    primaryColor: '#084499',
     backgroundColor: '#FFFFFF',
-    foregroundColor: '#3B394D',
     alternativeBackgroundColor: '#E6E6E6',
-    alternativeForegroundColor: '#4E4C66',
+    foregroundColor: '#111111',
   },
   dark: {
-    primaryColor: '#FF9673',
-    backgroundColor: '#001427',
-    foregroundColor: '#DAE6F2',
-    alternativeBackgroundColor: '#002040',
-    alternativeForegroundColor: '#C3CED9',
+    primaryColor: '#679CE6',
+    backgroundColor: '#2E2734',
+    alternativeBackgroundColor: '#17131A',
+    foregroundColor: '#EEEEEE',
   },
 }
 
@@ -50,10 +47,13 @@ export const createTheme = (base: BaseThemeName, options?: Theme): string => {
       background: ${theme.alternativeBackgroundColor};
     }
 
-    pre, code, kbd, samp,
+    pre, code, kbd, samp {
+      background: ${theme.alternativeBackgroundColor};
+    }
+
     input[type=submit][disabled], input[type=button][disabled], input[type=reset][disabled], button[disabled] {
       background: ${theme.alternativeBackgroundColor};
-      color: ${theme.alternativeForegroundColor};
+      color: ${theme.foregroundColor};
     }
 
     input:focus, select:focus, textarea:focus {
@@ -64,7 +64,7 @@ export const createTheme = (base: BaseThemeName, options?: Theme): string => {
       base === 'dark'
         ? `
       img {
-        opacity: 0.8;
+        opacity: 0.9;
       }
 
       img:hover {

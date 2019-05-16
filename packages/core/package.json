@@ -4,8 +4,10 @@
   "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/core",
   "license": "MIT",
   "scripts": {
-    "clean": "vd-dev clean",
-    "build": "vd-dev build",
+    "clean": "vd-dev clean es6",
+    "build:commonjs": "vd-dev build",
+    "build:es6": "vd-dev build --project tsconfig.es6.json",
+    "build": "npm run build:commonjs && npm run build:es6",
     "format": "vd-dev format",
     "postformat": "npm run tslint",
     "tslint": "vd-dev tslint",

@@ -107,19 +107,24 @@ export class GithubRepo implements RepoInterface {
   }
 
   async getSiteConfig (ref: string, siteConfigPath: string): Promise<SiteConfig | undefined> {
-    const reposGetContents: ReposGetContentsResponse | undefined = await this.getContentsReponse({
-      owner: this.info.owner,
-      repo: this.info.repo,
-      ref,
-      path: siteConfigPath,
-    })
-    if (!reposGetContents || Array.isArray(reposGetContents)) {
+    try {
+      const reposGetContents: ReposGetContentsResponse | undefined = await this.getContentsReponse({
+        owner: this.info.owner,
+        repo: this.info.repo,
+        ref,
+        path: siteConfigPath,
+      })
+      if (!reposGetContents || Array.isArray(reposGetContents)) {
+        return
+      }
+      const file: GithubFileResponse = reposGetContents
+      const siteConfigContent: string = await this.getFileContent(ref, file)
+      const siteConfig: SiteConfig = helper.parseSiteConfig(siteConfigContent)
+      return siteConfig
+    } catch (err) {
+      console.log('Failed to get site config', err)
       return
     }
-    const file: GithubFileResponse = reposGetContents
-    const siteConfigContent: string = await this.getFileContent(ref, file)
-    const siteConfig: SiteConfig = helper.parseConfig(siteConfigContent)
-    return siteConfig
   }
 
   private async getRepoReadmeContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined> {

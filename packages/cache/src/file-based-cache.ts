@@ -67,6 +67,7 @@ export class FileBasedCache implements CacheInterface {
         }
       } catch (err) {
         console.log('Read cache failed', info, err)
+        this.infoCache.del(key)
       }
     }
     const value = await computeValue()
