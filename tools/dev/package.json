@@ -27,7 +27,7 @@
     "eslint-plugin-promise": "4.1.1",
     "eslint-plugin-standard": "4.0.0",
     "latest-version": "5.1.0",
-    "lerna": "3.14.0",
+    "lerna": "3.14.1",
     "prettier": "1.17.1",
     "progress": "2.0.3",
     "rimraf": "2.6.3",
