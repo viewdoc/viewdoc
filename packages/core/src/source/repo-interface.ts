@@ -1,12 +1,11 @@
+import { DocContent, RepoInfo } from '../doc'
+import { FormatManager } from '../format'
 import { SiteConfig } from '../site-config'
-import { DocContent } from './doc-content'
-import { FormatInterface } from './format.interface'
-import { RepoInfo } from './repo-info'
 
 export interface GetDocContentOptions {
   readonly ref: string
   readonly docPath: string
-  readonly formats: FormatInterface[]
+  readonly formatManager: FormatManager
   readonly siteConfig?: SiteConfig
 }
 

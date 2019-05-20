@@ -1,4 +1,4 @@
-import { RepoInterface } from './repo.interface'
+import { RepoInterface } from './repo-interface'
 
 export interface GetRepoOptions {
   readonly owner: string
