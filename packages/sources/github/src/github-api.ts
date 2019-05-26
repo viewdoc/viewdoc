@@ -1,6 +1,6 @@
 import Octokit, {
-  ReposGetCommitRefShaParams,
-  ReposGetCommitRefShaResponse,
+  ReposGetCommitParams,
+  ReposGetCommitResponse,
   ReposGetContentsParams,
   ReposGetParams,
   ReposGetReadmeParams,
@@ -10,7 +10,7 @@ import Octokit, {
 } from '@octokit/rest'
 import { CacheInterface } from '@viewdoc/core/lib/cache'
 
-export { ReposGetResponse, ReposGetReadmeResponse }
+export { ReposGetResponse, ReposGetCommitResponse, ReposGetReadmeResponse }
 
 export interface GithubApiOptions {
   readonly accessToken: string
@@ -24,10 +24,6 @@ export interface GithubFileResponse {
 }
 
 export type ReposGetContentsResponse = GithubFileResponse | GithubFileResponse[]
-
-export interface ReposGetCommitRefResponse {
-  sha: string
-}
 
 export class GithubApi {
   private readonly octokit: Octokit
@@ -47,16 +43,13 @@ export class GithubApi {
     )
   }
 
-  async getReposGetCommitRefResponse (
-    params: ReposGetCommitRefShaParams,
-  ): Promise<ReposGetCommitRefResponse | undefined> {
-    const response: ReposGetCommitRefShaResponse | undefined = await this.requestCache.getValue(
-      `github/reposCommitRef/${params.owner}/${params.repo}/${params.ref}`,
-      () => this.requestWithNotFound(this.octokit.repos.getCommitRefSha(params)),
+  async getReposGetCommitResponse (params: ReposGetCommitParams): Promise<ReposGetCommitResponse | undefined> {
+    const response: ReposGetCommitResponse | undefined = await this.requestCache.getValue(
+      `github/reposCommit/${params.owner}/${params.repo}/${params.commit_sha}`,
+      () => this.requestWithNotFound(this.octokit.repos.getCommit(params)),
       { minutes: 1 },
     )
-    // Casting here because ReposGetCommitRefShaResponse does not have sha field
-    return response && (response as ReposGetCommitRefResponse)
+    return response
   }
 
   getReadmeResponse (params: ReposGetReadmeParams): Promise<ReposGetReadmeResponse | undefined> {

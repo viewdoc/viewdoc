@@ -6,7 +6,7 @@ import path from 'path'
 import {
   GithubApi,
   GithubFileResponse,
-  ReposGetCommitRefResponse,
+  ReposGetCommitResponse,
   ReposGetContentsResponse,
   ReposGetReadmeResponse,
   ReposGetResponse,
@@ -39,10 +39,10 @@ export class GithubRepo implements RepoInterface {
   }
 
   async getCommitRef (ref?: string): Promise<string | undefined> {
-    const reposGetCommitRef: ReposGetCommitRefResponse | undefined = await this.githubApi.getReposGetCommitRefResponse({
+    const reposGetCommitRef: ReposGetCommitResponse | undefined = await this.githubApi.getReposGetCommitResponse({
       owner: this.info.owner,
       repo: this.info.repo,
-      ref: ref || this.info.defaultBranch,
+      commit_sha: ref || this.info.defaultBranch,
     })
     if (!reposGetCommitRef) {
       return
