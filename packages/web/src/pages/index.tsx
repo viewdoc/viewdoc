@@ -11,14 +11,14 @@ export default class HomePage extends Vue {
 
   render () {
     return (
-      <div class='ma-3'>
-        <h1 class='display-3'>Welcome to ViewDoc!</h1>
+      <main>
+        <h1>Welcome to ViewDoc!</h1>
         <ul>
           <li><nuxt-link to='/axios/axios'>axios</nuxt-link></li>
           <li><nuxt-link to='/asciidoc/asciidoc'>asciidoc</nuxt-link></li>
           <li><nuxt-link to='/ikatyang/emoji-cheat-sheet'>emoji</nuxt-link></li>
         </ul>
-      </div>
+      </main>
     )
   }
 }

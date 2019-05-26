@@ -18,12 +18,18 @@
   },
   "dependencies": {
     "@viewdoc/tiny.css": "0.0.0",
+    "cheerio": "1.0.0-rc.3",
+    "is-relative-url": "3.0.0",
     "js-yaml": "3.13.1",
-    "luxon": "1.15.0"
+    "luxon": "1.15.0",
+    "url-join": "4.0.0"
   },
   "devDependencies": {
+    "@types/cheerio": "0.22.11",
+    "@types/is-relative-url": "3.0.0",
     "@types/js-yaml": "3.12.1",
     "@types/luxon": "1.13.0",
+    "@types/url-join": "4.0.0",
     "@viewdoc/dev": "0.0.0"
   }
 }

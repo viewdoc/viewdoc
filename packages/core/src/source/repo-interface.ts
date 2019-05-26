@@ -3,8 +3,10 @@ import { FormatManager } from '../format'
 import { SiteConfig } from '../site-config'
 
 export interface GetDocContentOptions {
-  readonly ref: string
-  readonly docPath: string
+  readonly originalPath: string
+  readonly originalRepoId: string
+  readonly originalRef?: string
+  readonly resolvedRef: string
   readonly formatManager: FormatManager
   readonly siteConfig?: SiteConfig
 }

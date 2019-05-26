@@ -11,14 +11,14 @@ import { MetaInfo } from 'vue-meta'
     if (params.owner === 'viewdoc' && params.repo === 'x-api') {
       return false
     }
-    return true
+    return !!(params.repo || params.pathMatch)
   },
   async asyncData (context: Context) {
     const { params } = context
     const pageParams: DocPageParams = {
       owner: params.owner,
-      repoId: params.repo,
-      docPath: `/${params.path || ''}`,
+      repoId: params.repo || params.pathMatch,
+      path: `/${(params.repo && params.pathMatch) || ''}`,
     }
     const pageContent: DocContent = (await axios.get('http://localhost:4000/viewdoc/x-api/doc-content', { params: pageParams })).data
     return {

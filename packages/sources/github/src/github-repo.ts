@@ -51,23 +51,23 @@ export class GithubRepo implements RepoInterface {
   }
 
   async getDocContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined> {
-    const { docPath } = getDocContentOptions
-    if (docPath === '/') {
-      // If docPath is root, return the readme of the repo
-      return this.getRepoReadmeContent(getDocContentOptions)
+    const { originalPath } = getDocContentOptions
+    if (originalPath === '/') {
+      // If originalPath is root, return the readme of the repo
+      return this.getDocContentFromRepoReadme(getDocContentOptions)
     }
     const defaultExtension = '.md'
-    if (path.extname(docPath) !== defaultExtension) {
-      // Try docPath with default extension first, because it is most likely used
+    if (path.extname(originalPath) !== defaultExtension) {
+      // Try originalPath with default extension, because it is most likely used
       const content: DocContent | undefined = await this.getDocContent({
         ...getDocContentOptions,
-        docPath: `${docPath}${defaultExtension}`,
+        originalPath: `${originalPath}${defaultExtension}`,
       })
       if (content) {
         return content
       }
     }
-    return this.getDocContentFromFullPath(getDocContentOptions)
+    return this.getDocContentFromOriginalPath(getDocContentOptions)
   }
 
   async getSiteConfig (ref: string, siteConfigPath: string): Promise<SiteConfig | undefined> {
@@ -91,33 +91,37 @@ export class GithubRepo implements RepoInterface {
     }
   }
 
-  private async getDocContentFromFullPath (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined> {
-    const { ref, docPath } = getDocContentOptions
+  private async getDocContentFromOriginalPath (
+    getDocContentOptions: GetDocContentOptions,
+  ): Promise<DocContent | undefined> {
+    const { resolvedRef, originalPath } = getDocContentOptions
     const reposGetContents: ReposGetContentsResponse | undefined = await this.githubApi.getContentsReponse({
       owner: this.info.owner,
       repo: this.info.repo,
-      ref,
-      path: docPath,
+      ref: resolvedRef,
+      path: originalPath,
     })
     if (!reposGetContents) {
       return
     }
     if (Array.isArray(reposGetContents)) {
-      // If docPath is a directory, return its readme file
+      // If originalPath is a directory, return its readme file
       const filesInDir: GithubFileResponse[] = reposGetContents
-      return this.findReadmeInDir(getDocContentOptions, filesInDir)
+      return this.getDocContentFromDirectory(getDocContentOptions, filesInDir)
     }
-    // If docPath is a file, return it
+    // If originalPath is a file, return it
     const file: GithubFileResponse = reposGetContents
-    return this.getFile(getDocContentOptions, file)
+    return this.getDocContentFromFile(getDocContentOptions, file)
   }
 
-  private async getRepoReadmeContent (getDocContentOptions: GetDocContentOptions): Promise<DocContent | undefined> {
-    const { ref, formatManager, siteConfig } = getDocContentOptions
+  private async getDocContentFromRepoReadme (
+    getDocContentOptions: GetDocContentOptions,
+  ): Promise<DocContent | undefined> {
+    const { resolvedRef, formatManager } = getDocContentOptions
     const reposGetReadme: ReposGetReadmeResponse | undefined = await this.githubApi.getReadmeResponse({
       owner: this.info.owner,
       repo: this.info.repo,
-      ref,
+      ref: resolvedRef,
     })
     if (!reposGetReadme) {
       return
@@ -128,30 +132,28 @@ export class GithubRepo implements RepoInterface {
     }
     return helper.createDocContent({
       info: this.info,
-      name: reposGetReadme.name,
-      docPath: reposGetReadme.path,
+      resolvedPath: reposGetReadme.path,
       format,
       content: helper.decodeBase64(reposGetReadme.content),
-      siteConfig,
+      options: getDocContentOptions,
     })
   }
 
-  private async findReadmeInDir (
+  private async getDocContentFromDirectory (
     getDocContentOptions: GetDocContentOptions,
     filesInDir: GithubFileResponse[],
   ): Promise<DocContent | undefined> {
-    const { ref, formatManager, siteConfig } = getDocContentOptions
+    const { resolvedRef, formatManager } = getDocContentOptions
     for (const file of filesInDir) {
       if (path.parse(file.name).name.toLowerCase() === 'readme') {
         const format: FormatInterface | undefined = formatManager.findFormatByFileName(file.name)
         if (format) {
           return helper.createDocContent({
             info: this.info,
-            name: file.name,
-            docPath: file.path,
+            resolvedPath: file.path,
             format,
-            content: await this.getFileContent(ref, file),
-            siteConfig,
+            content: await this.getFileContent(resolvedRef, file),
+            options: getDocContentOptions,
           })
         }
       }
@@ -159,22 +161,21 @@ export class GithubRepo implements RepoInterface {
     return
   }
 
-  private async getFile (
+  private async getDocContentFromFile (
     getDocContentOptions: GetDocContentOptions,
     file: GithubFileResponse,
   ): Promise<DocContent | undefined> {
-    const { ref, formatManager, siteConfig } = getDocContentOptions
+    const { resolvedRef, formatManager } = getDocContentOptions
     const format: FormatInterface | undefined = formatManager.findFormatByFileName(file.name)
     if (!format) {
       return
     }
     return helper.createDocContent({
       info: this.info,
-      name: file.name,
-      docPath: file.path,
+      resolvedPath: file.path,
       format,
-      content: await this.getFileContent(ref, file),
-      siteConfig,
+      content: await this.getFileContent(resolvedRef, file),
+      options: getDocContentOptions,
     })
   }
 

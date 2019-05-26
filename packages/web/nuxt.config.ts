@@ -8,6 +8,10 @@ const nuxtConfig: NuxtConfiguration = {
   server: {
     port: process.env.PORT || 4000,
   },
+  render: {
+    // Disable render.fallback so that .md files can be rendered
+    fallback: false,
+  },
   serverMiddleware: [{ path: '/viewdoc/x-api', handler: path.join(__dirname, 'src/server/api-handler') }],
   head: {
     titleTemplate: (title: string): string => {

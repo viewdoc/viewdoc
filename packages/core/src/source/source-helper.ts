@@ -1,15 +1,19 @@
+import cheerio from 'cheerio'
+import isRelativeUrl from 'is-relative-url'
 import jsYaml from 'js-yaml'
+import url from 'url'
+import urlJoin from 'url-join'
 import { DocContent, RepoInfo } from '../doc'
 import { FormatInterface } from '../format'
 import { SiteConfig } from '../site-config'
+import { GetDocContentOptions } from './repo-interface'
 
 export interface CreateDocContentOptions {
+  readonly options: GetDocContentOptions
   readonly info: RepoInfo
-  readonly name: string
-  readonly docPath: string
+  readonly resolvedPath: string
   readonly format: FormatInterface
   readonly content: string
-  readonly siteConfig?: SiteConfig
 }
 
 export class SourceHelper {
@@ -18,12 +22,13 @@ export class SourceHelper {
   }
 
   async createDocContent (createDocContentOptions: CreateDocContentOptions): Promise<DocContent> {
-    const { info, name, docPath, format, content, siteConfig } = createDocContentOptions
-    const { toc, output: body } = await format.getHtmlContent(content)
+    const { options, info, resolvedPath, format, content } = createDocContentOptions
+    const { originalRepoId, siteConfig } = options
+    const { toc, output } = await format.getHtmlContent(content)
+    const body = this.transformHtml(output, info, originalRepoId, resolvedPath)
     return {
       info,
-      name,
-      docPath,
+      resolvedPath,
       toc,
       body,
       siteConfig,
@@ -32,5 +37,21 @@ export class SourceHelper {
 
   parseSiteConfig (siteConfigContent: string): SiteConfig {
     return jsYaml.safeLoad(siteConfigContent)
+  }
+
+  private transformHtml (html: string, info: RepoInfo, originalRepoId: string, resolvedPath: string): string {
+    const query: CheerioStatic = cheerio.load(html)
+    const currentUrl = urlJoin('/', info.owner, originalRepoId, resolvedPath)
+    query('a').each((index, element) => {
+      const anchor = query(element)
+      const originalUrl = anchor.attr('href')
+      if (isRelativeUrl(originalUrl) && !originalUrl.startsWith('#')) {
+        const resolvedUrl = originalUrl.startsWith('/')
+          ? urlJoin('/', info.owner, originalRepoId, originalUrl)
+          : url.resolve(currentUrl, originalUrl || './')
+        anchor.attr('href', resolvedUrl)
+      }
+    })
+    return query.html()
   }
 }
