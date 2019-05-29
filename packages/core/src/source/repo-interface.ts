@@ -6,7 +6,7 @@ export interface GetDocContentOptions {
   readonly originalPath: string
   readonly originalRepoId: string
   readonly originalRef?: string
-  readonly resolvedRef: string
+  readonly commitRef: string
   readonly formatManager: FormatManager
   readonly siteConfig?: SiteConfig
 }

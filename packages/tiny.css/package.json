@@ -5,10 +5,8 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "clean": "vd-dev clean es6",
-    "build:commonjs": "vd-dev build",
-    "build:es6": "vd-dev build --project tsconfig.es6.json",
-    "build": "npm run build:commonjs && npm run build:es6 && node ./generate-themes && npm run build:css",
+    "clean": "vd-dev clean",
+    "build": "vd-dev build && node ./generate-themes && npm run build:css",
     "clean:css": "rimraf dist",
     "build:css": "parcel build scss/index.html scss/base.scss --no-source-maps",
     "prebuild:css": "npm run clean:css",

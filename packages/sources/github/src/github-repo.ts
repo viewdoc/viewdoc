@@ -94,11 +94,11 @@ export class GithubRepo implements RepoInterface {
   private async getDocContentFromOriginalPath (
     getDocContentOptions: GetDocContentOptions,
   ): Promise<DocContent | undefined> {
-    const { resolvedRef, originalPath } = getDocContentOptions
+    const { commitRef, originalPath } = getDocContentOptions
     const reposGetContents: ReposGetContentsResponse | undefined = await this.githubApi.getContentsReponse({
       owner: this.info.owner,
       repo: this.info.repo,
-      ref: resolvedRef,
+      ref: commitRef,
       path: originalPath,
     })
     if (!reposGetContents) {
@@ -117,11 +117,11 @@ export class GithubRepo implements RepoInterface {
   private async getDocContentFromRepoReadme (
     getDocContentOptions: GetDocContentOptions,
   ): Promise<DocContent | undefined> {
-    const { resolvedRef, formatManager } = getDocContentOptions
+    const { commitRef, formatManager } = getDocContentOptions
     const reposGetReadme: ReposGetReadmeResponse | undefined = await this.githubApi.getReadmeResponse({
       owner: this.info.owner,
       repo: this.info.repo,
-      ref: resolvedRef,
+      ref: commitRef,
     })
     if (!reposGetReadme) {
       return
@@ -143,7 +143,7 @@ export class GithubRepo implements RepoInterface {
     getDocContentOptions: GetDocContentOptions,
     filesInDir: GithubFileResponse[],
   ): Promise<DocContent | undefined> {
-    const { resolvedRef, formatManager } = getDocContentOptions
+    const { commitRef, formatManager } = getDocContentOptions
     for (const file of filesInDir) {
       if (path.parse(file.name).name.toLowerCase() === 'readme') {
         const format: FormatInterface | undefined = formatManager.findFormatByFileName(file.name)
@@ -152,7 +152,7 @@ export class GithubRepo implements RepoInterface {
             info: this.info,
             resolvedPath: file.path,
             format,
-            content: await this.getFileContent(resolvedRef, file),
+            content: await this.getFileContent(commitRef, file),
             options: getDocContentOptions,
           })
         }
@@ -165,7 +165,7 @@ export class GithubRepo implements RepoInterface {
     getDocContentOptions: GetDocContentOptions,
     file: GithubFileResponse,
   ): Promise<DocContent | undefined> {
-    const { resolvedRef, formatManager } = getDocContentOptions
+    const { commitRef, formatManager } = getDocContentOptions
     const format: FormatInterface | undefined = formatManager.findFormatByFileName(file.name)
     if (!format) {
       return
@@ -174,7 +174,7 @@ export class GithubRepo implements RepoInterface {
       info: this.info,
       resolvedPath: file.path,
       format,
-      content: await this.getFileContent(resolvedRef, file),
+      content: await this.getFileContent(commitRef, file),
       options: getDocContentOptions,
     })
   }

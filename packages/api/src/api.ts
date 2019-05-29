@@ -19,13 +19,13 @@ export class ViewDocApi {
 
   async getDocContent (docPageParams: DocPageParams, sourceId: string): Promise<DocContent | undefined> {
     await this.ensureReady()
-    const { owner, repoId, path: originalPath } = docPageParams
+    const { owner, repoId, path: docPath } = docPageParams
     const repoIdsParts = repoId.split('@')
     const repo: RepoInterface | undefined = await this.getRepo(sourceId, owner, repoIdsParts[0])
     if (!repo) {
       return
     }
-    return this.getDocContentFromRepo(repo, originalPath, repoId, repoIdsParts[1])
+    return this.getDocContentFromRepo(repo, docPath, repoId, repoIdsParts[1])
   }
 
   private async getRepo (sourceId: string, owner: string, repo: string): Promise<RepoInterface | undefined> {
@@ -38,21 +38,21 @@ export class ViewDocApi {
 
   private async getDocContentFromRepo (
     repo: RepoInterface,
-    originalPath: string,
+    docPath: string,
     originalRepoId: string,
     originalRef?: string,
   ): Promise<DocContent | undefined> {
     // Use commitRef instead of originalRef for correct caching
-    const resolvedRef: string | undefined = await repo.getCommitRef(originalRef)
-    if (!resolvedRef) {
+    const commitRef: string | undefined = await repo.getCommitRef(originalRef)
+    if (!commitRef) {
       return
     }
-    const siteConfig: SiteConfig | undefined = await repo.getSiteConfig(resolvedRef, '.viewdoc-config')
+    const siteConfig: SiteConfig | undefined = await repo.getSiteConfig(commitRef, '.viewdoc-config')
     return repo.getDocContent({
-      originalPath,
+      originalPath: docPath,
       originalRepoId,
       originalRef,
-      resolvedRef,
+      commitRef,
       formatManager: this.formatManager,
       siteConfig,
     })

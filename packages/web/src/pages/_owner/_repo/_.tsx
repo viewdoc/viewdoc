@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/vue-app'
 import { DocContent, DocPageParams } from '@viewdoc/core/es6/doc'
-import { createTheme } from '@viewdoc/tiny.css/es6'
+import { SiteConfigResolver } from '@viewdoc/core/es6/site-config'
 import axios from 'axios'
 import { Component, Vue } from 'nuxt-property-decorator'
 import { MetaInfo } from 'vue-meta'
@@ -27,17 +27,15 @@ import { MetaInfo } from 'vue-meta'
   },
 })
 export default class DocPage extends Vue {
+  private readonly siteConfigResolver = new SiteConfigResolver()
   private readonly pageContent!: DocContent
 
   head (): MetaInfo {
     const { info, siteConfig } = this.pageContent
-    const title = siteConfig && siteConfig.title || `${info.owner}/${info.repo}${info.description ? `: ${info.description}` : ''}`
-    const themeBase = siteConfig && siteConfig.theme && siteConfig.theme.base || 'light'
-    const themeOptions = siteConfig && siteConfig.theme && siteConfig.theme.options
     return {
-      title,
+      title: this.siteConfigResolver.getTitle(info, siteConfig),
       style: [
-        { cssText: createTheme(themeBase, themeOptions), type: 'text/css' },
+        { cssText: this.siteConfigResolver.getTheme(siteConfig), type: 'text/css' },
       ],
     }
   }
