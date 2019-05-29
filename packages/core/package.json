@@ -28,7 +28,7 @@
     "@types/cheerio": "0.22.11",
     "@types/is-relative-url": "3.0.0",
     "@types/js-yaml": "3.12.1",
-    "@types/luxon": "1.13.0",
+    "@types/luxon": "1.15.0",
     "@types/url-join": "4.0.0",
     "@viewdoc/dev": "0.0.0"
   }
