@@ -3,6 +3,7 @@ import { DocContent, DocPageParams } from '@viewdoc/core/es6/doc'
 import { SiteConfigResolver } from '@viewdoc/core/es6/site-config'
 import axios from 'axios'
 import { Component, Vue } from 'nuxt-property-decorator'
+import { SidebarElement } from 'sidebarjs'
 import { MetaInfo } from 'vue-meta'
 
 @Component<DocPage>({
@@ -29,6 +30,11 @@ import { MetaInfo } from 'vue-meta'
 export default class DocPage extends Vue {
   private readonly siteConfigResolver = new SiteConfigResolver()
   private readonly pageContent!: DocContent
+  // TODO make this field private when used to open/close sidebar
+  public sidebar!: SidebarElement
+  readonly $refs!: {
+    pageContentBody: HTMLElement,
+  }
 
   head (): MetaInfo {
     const { info, siteConfig } = this.pageContent
@@ -40,9 +46,16 @@ export default class DocPage extends Vue {
     }
   }
 
+  mounted () {
+    this.sidebar = new SidebarElement({ responsive: true, mainContent: this.$refs.pageContentBody })
+  }
+
   render () {
     return (
-      <main domProps={{ innerHTML: this.pageContent.body }}/>
+      <main>
+        <div sidebarjs class='overflow-y-auto' domProps={{ innerHTML: this.pageContent.toc }}/>
+        <div ref='pageContentBody' domProps={{ innerHTML: this.pageContent.body }}/>
+      </main>
     )
   }
 }
