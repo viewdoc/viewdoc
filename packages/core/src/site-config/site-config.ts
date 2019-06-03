@@ -8,4 +8,5 @@ export interface ThemeConfig {
 export interface SiteConfig {
   readonly title?: string
   readonly theme?: ThemeConfig
+  readonly rootPath?: string
 }

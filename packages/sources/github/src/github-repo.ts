@@ -34,7 +34,7 @@ export class GithubRepo implements RepoInterface {
       defaultBranch: reposGet.default_branch,
       description: reposGet.description,
       homePage: reposGet.homepage,
-      license: reposGet.license.key,
+      license: reposGet.license && reposGet.license.key,
     }
   }
 

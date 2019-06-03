@@ -14,4 +14,8 @@ export class SiteConfigResolver {
     const options = siteConfig && siteConfig.theme && siteConfig.theme.options
     return createTheme(base, options)
   }
+
+  getRootPath (siteConfig?: SiteConfig) {
+    return (siteConfig && siteConfig.rootPath) || '/'
+  }
 }

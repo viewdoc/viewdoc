@@ -2,10 +2,11 @@ import { FileBasedCache } from '@viewdoc/cache'
 import { CacheInterface } from '@viewdoc/core/lib/cache'
 import { DocContent, DocPageParams } from '@viewdoc/core/lib/doc'
 import { FormatInterface, FormatManager } from '@viewdoc/core/lib/format'
-import { SiteConfig } from '@viewdoc/core/lib/site-config'
+import { SiteConfig, SiteConfigResolver } from '@viewdoc/core/lib/site-config'
 import { RepoInterface, SourceInterface, SourceManager } from '@viewdoc/core/lib/source'
 import { GithubApi, GithubSource } from '@viewdoc/github'
 import { DateTime } from 'luxon'
+import path from 'path'
 import { ApiConfig } from './config'
 import { MarkupService } from './markup-service'
 
@@ -48,8 +49,9 @@ export class ViewDocApi {
       return
     }
     const siteConfig: SiteConfig | undefined = await repo.getSiteConfig(commitRef, '.viewdoc-config')
+    const siteConfigResolver = new SiteConfigResolver()
     return repo.getDocContent({
-      originalPath: docPath,
+      originalPath: path.join(siteConfigResolver.getRootPath(siteConfig), docPath),
       originalRepoId,
       originalRef,
       commitRef,
