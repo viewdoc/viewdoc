@@ -21,7 +21,7 @@
     "cheerio": "1.0.0-rc.3",
     "is-relative-url": "3.0.0",
     "js-yaml": "3.13.1",
-    "luxon": "1.15.0",
+    "luxon": "1.16.0",
     "url-join": "4.0.0"
   },
   "devDependencies": {

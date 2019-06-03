@@ -20,7 +20,7 @@
     "@viewdoc/core": "0.0.0",
     "@viewdoc/github": "0.0.0",
     "axios": "0.19.0",
-    "luxon": "1.15.0"
+    "luxon": "1.16.0"
   },
   "devDependencies": {
     "@types/axios": "0.14.0",
