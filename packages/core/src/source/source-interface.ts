@@ -7,5 +7,6 @@ export interface GetRepoOptions {
 
 export interface SourceInterface {
   readonly id: string
+  readonly subdomains: string[]
   getRepo (getRepoOptions: GetRepoOptions): Promise<RepoInterface | undefined>
 }

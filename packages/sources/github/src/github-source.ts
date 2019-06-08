@@ -4,6 +4,7 @@ import { GithubRepo } from './github-repo'
 
 export class GithubSource implements SourceInterface {
   readonly id: string = 'github'
+  readonly subdomains: string[] = ['gh', 'github']
 
   constructor (private readonly githubApi: GithubApi) {}
 

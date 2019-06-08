@@ -43,13 +43,12 @@ export class GithubApi {
     )
   }
 
-  async getReposGetCommitResponse (params: ReposGetCommitParams): Promise<ReposGetCommitResponse | undefined> {
-    const response: ReposGetCommitResponse | undefined = await this.requestCache.getValue(
+  getReposGetCommitResponse (params: ReposGetCommitParams): Promise<ReposGetCommitResponse | undefined> {
+    return this.requestCache.getValue(
       `github/reposCommit/${params.owner}/${params.repo}/${params.commit_sha}`,
       () => this.requestWithNotFound(this.octokit.repos.getCommit(params)),
       { minutes: 1 },
     )
-    return response
   }
 
   getReadmeResponse (params: ReposGetReadmeParams): Promise<ReposGetReadmeResponse | undefined> {

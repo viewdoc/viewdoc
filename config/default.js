@@ -4,6 +4,10 @@ exports.github = {
   accessToken: 'GITHUB_ACCESS_TOKEN',
 }
 
+exports.gitlab = {
+  accessToken: 'GITLAB_ACCESS_TOKEN',
+}
+
 exports.markupService = {
   baseUrl: 'http://localhost:4100'
 }

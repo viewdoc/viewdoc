@@ -5,6 +5,7 @@ import { FormatInterface, FormatManager } from '@viewdoc/core/lib/format'
 import { SiteConfig, SiteConfigResolver } from '@viewdoc/core/lib/site-config'
 import { RepoInterface, SourceInterface, SourceManager } from '@viewdoc/core/lib/source'
 import { GithubApi, GithubSource } from '@viewdoc/github'
+import { GitlabApi, GitlabSource } from '@viewdoc/gitlab'
 import { DateTime } from 'luxon'
 import path from 'path'
 import { ApiConfig } from './config'
@@ -18,19 +19,19 @@ export class ViewDocApi {
 
   constructor (private readonly config: ApiConfig) {}
 
-  async getDocContent (docPageParams: DocPageParams, sourceId: string): Promise<DocContent | undefined> {
+  async getDocContent (docPageParams: DocPageParams, subdomain: string): Promise<DocContent | undefined> {
     await this.ensureReady()
     const { owner, repoId, path: docPath } = docPageParams
     const repoIdsParts = repoId.split('@')
-    const repo: RepoInterface | undefined = await this.getRepo(sourceId, owner, repoIdsParts[0])
+    const repo: RepoInterface | undefined = await this.getRepo(subdomain, owner, repoIdsParts[0])
     if (!repo) {
       return
     }
     return this.getDocContentFromRepo(repo, docPath, repoId, repoIdsParts[1])
   }
 
-  private async getRepo (sourceId: string, owner: string, repo: string): Promise<RepoInterface | undefined> {
-    const source: SourceInterface | undefined = this.sourceManager.findById(sourceId)
+  private async getRepo (subdomain: string, owner: string, repo: string): Promise<RepoInterface | undefined> {
+    const source: SourceInterface | undefined = this.sourceManager.findBySubdomain(subdomain)
     if (!source) {
       return
     }
@@ -79,7 +80,10 @@ export class ViewDocApi {
   }
 
   private createSources (cache: CacheInterface): SourceInterface[] {
-    return [new GithubSource(new GithubApi({ ...this.config.github, cache }))]
+    return [
+      new GithubSource(new GithubApi({ ...this.config.github, cache })),
+      new GitlabSource(new GitlabApi({ ...this.config.gitlab, cache })),
+    ]
   }
 
   private createFormats (): FormatInterface[] {

@@ -11,6 +11,7 @@ const api = new ViewDocApi({
   markupService: config.get('markupService'),
   cache: config.get('cache'),
   github: config.get('github'),
+  gitlab: config.get('gitlab'),
 })
 
 const app = express()
@@ -25,7 +26,8 @@ app.use(bodyParser.json())
 app.get('/doc-content', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const pageParams: DocPageParams = req.query
-    const docContent: DocContent | undefined = await api.getDocContent(pageParams, 'github')
+    const subdomain = req.subdomains && req.subdomains[0]
+    const docContent: DocContent | undefined = await api.getDocContent(pageParams, subdomain)
     if (!docContent) {
       next()
       return
