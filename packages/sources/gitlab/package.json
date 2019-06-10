@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@viewdoc/core": "0.0.0",
-    "gitlab": "5.0.1"
+    "gitlab": "6.3.0"
   },
   "devDependencies": {
     "@viewdoc/dev": "0.0.0"
