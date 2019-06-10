@@ -50,6 +50,10 @@ export default class DocPage extends Vue {
 
   mounted () {
     this.sidebar = new SidebarElement({ responsive: true, mainContent: this.$refs.pageContentBody })
+    // Fix scrolling with hash link https://forum.vuejs.org/t/how-to-handle-anchors-bookmarks-with-vue-router/14563
+    if (this.$route.hash) {
+      setTimeout(() => { location.href = this.$route.hash })
+    }
   }
 
   render () {

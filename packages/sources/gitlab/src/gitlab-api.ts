@@ -103,9 +103,10 @@ export class GitlabApi {
     )
   }
 
-  private async requestWithNotFound<T> (request: Promise<T>): Promise<T | undefined> {
+  private async requestWithNotFound<T> (request: Promise<object>): Promise<T | undefined> {
     try {
-      return await request
+      // TODO remove unknown casting when gitlab package provides response typing
+      return ((await request) as unknown) as T
     } catch (err) {
       if (err.response && err.response.status === 404) {
         return
