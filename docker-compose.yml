@@ -1,0 +1,20 @@
+version: '3'
+services:
+  web:
+    depends_on:
+      - markup
+    image: viewdoc/nodejs
+    volumes:
+      - ./config:/usr/src/app/config
+      - ./package.json:/usr/src/app/package.json
+      - ./packages:/usr/src/app/packages
+      - ./tmp:/usr/src/app/tmp
+    command: npm run services:start_dev_web
+    ports:
+      - 4000:4000
+  markup:
+    image: viewdoc/markup
+    volumes:
+      - ./lib-services/markup:/usr/src/app
+    ports:
+      - 4100:4100

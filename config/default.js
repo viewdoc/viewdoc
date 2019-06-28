@@ -9,7 +9,7 @@ exports.gitlab = {
 }
 
 exports.markupService = {
-  baseUrl: 'http://localhost:4100'
+  baseUrl: 'http://markup:4100'
 }
 
 exports.cache = {

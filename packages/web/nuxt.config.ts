@@ -6,6 +6,7 @@ const nuxtConfig: NuxtConfiguration = {
   rootDir: __dirname,
   srcDir: path.join(__dirname, 'src'),
   server: {
+    host: process.env.HOST || '0.0.0.0',
     port: process.env.PORT || 4000,
   },
   render: {
