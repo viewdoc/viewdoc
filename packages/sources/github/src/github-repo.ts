@@ -42,7 +42,7 @@ export class GithubRepo implements RepoInterface {
     const reposGetCommit: ReposGetCommitResponse | undefined = await this.githubApi.getReposGetCommitResponse({
       owner: this.info.owner,
       repo: this.info.repo,
-      commit_sha: ref || this.info.defaultBranch,
+      ref: ref || this.info.defaultBranch,
     })
     if (!reposGetCommit) {
       return

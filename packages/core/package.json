@@ -21,14 +21,14 @@
     "cheerio": "1.0.0-rc.3",
     "is-relative-url": "3.0.0",
     "js-yaml": "3.13.1",
-    "luxon": "1.16.0",
-    "url-join": "4.0.0"
+    "luxon": "1.17.2",
+    "url-join": "4.0.1"
   },
   "devDependencies": {
-    "@types/cheerio": "0.22.11",
+    "@types/cheerio": "0.22.12",
     "@types/is-relative-url": "3.0.0",
     "@types/js-yaml": "3.12.1",
-    "@types/luxon": "1.15.1",
+    "@types/luxon": "1.15.2",
     "@types/url-join": "4.0.0",
     "@viewdoc/dev": "0.0.0"
   }

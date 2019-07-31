@@ -21,11 +21,11 @@
     "@viewdoc/github": "0.0.0",
     "@viewdoc/gitlab": "0.0.0",
     "axios": "0.19.0",
-    "luxon": "1.16.0"
+    "luxon": "1.17.2"
   },
   "devDependencies": {
     "@types/axios": "0.14.0",
-    "@types/luxon": "1.15.1",
+    "@types/luxon": "1.15.2",
     "@viewdoc/dev": "0.0.0"
   }
 }

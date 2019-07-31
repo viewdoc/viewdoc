@@ -23,6 +23,6 @@
     "services:start_dev": "npm run build && docker-compose up"
   },
   "devDependencies": {
-    "lerna": "3.15.0"
+    "lerna": "3.16.4"
   }
 }

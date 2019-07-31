@@ -45,7 +45,7 @@ export class GithubApi {
 
   getReposGetCommitResponse (params: ReposGetCommitParams): Promise<ReposGetCommitResponse | undefined> {
     return this.requestCache.getValue(
-      `github/reposCommit/${params.owner}/${params.repo}/${params.commit_sha}`,
+      `github/reposCommit/${params.owner}/${params.repo}/${params.ref}`,
       () => this.requestWithNotFound(this.octokit.repos.getCommit(params)),
       { minutes: 1 },
     )

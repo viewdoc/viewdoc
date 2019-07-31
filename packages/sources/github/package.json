@@ -16,7 +16,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@octokit/rest": "16.28.1",
+    "@octokit/rest": "16.28.7",
     "@viewdoc/core": "0.0.0"
   },
   "devDependencies": {
