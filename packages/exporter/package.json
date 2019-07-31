@@ -1,0 +1,30 @@
+{
+  "name": "@viewdoc/exporter",
+  "version": "0.0.0",
+  "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/exporter",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "vd-dev clean",
+    "build": "vd-dev build",
+    "format": "vd-dev format",
+    "postformat": "npm run tslint",
+    "tslint": "vd-dev tslint",
+    "publish:prepare": "npm run clean && npm run build",
+    "dev": "NODE_ENV=development node lib/server.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "express": "4.17.1",
+    "fs-extra": "8.0.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "1.17.0",
+    "@types/express": "4.17.0",
+    "@types/fs-extra": "7.0.0",
+    "@viewdoc/dev": "0.0.0"
+  }
+}

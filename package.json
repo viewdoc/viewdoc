@@ -15,11 +15,12 @@
     "check:deps": "node ./scripts/dev checkdeps",
     "publish:try": "node ./scripts/dev run publish:prepare && lerna version --no-push",
     "publish:now": "node ./scripts/dev run publish:prepare && lerna publish",
-    "services:build_markup": "cd lib-services/markup && docker build -t viewdoc/markup .",
-    "services:build_nodejs": "docker build -t viewdoc/nodejs .",
-    "services:build_dev": "npm run services:build_nodejs && npm run services:build_markup",
+    "services:build_markup": "cd docker-services/markup && docker build -t viewdoc/markup .",
+    "services:build_dev_nodejs": "docker build -t viewdoc/dev-nodejs -f docker-services/dev-nodejs.dockerfile .",
+    "services:build_dev": "npm run services:build_dev_nodejs && npm run services:build_markup",
     "services:start_dev_web": "cd packages/web && npm run dev",
-    "services:start_dev": "docker-compose up"
+    "services:start_dev_exporter": "cd packages/exporter && npm run dev",
+    "services:start_dev": "npm run build && docker-compose up"
   },
   "devDependencies": {
     "lerna": "3.15.0"

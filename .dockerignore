@@ -1,4 +1,4 @@
 .git
-lib-services
+docker-services
 node_modules
 tmp
