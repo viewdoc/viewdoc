@@ -20,9 +20,12 @@
     "services:build_dev": "npm run services:build_dev_nodejs && npm run services:build_markup",
     "services:start_dev_web": "cd packages/web && npm run dev",
     "services:start_dev_exporter": "cd packages/exporter && npm run dev",
-    "services:start_dev": "npm run build && docker-compose up"
+    "services:start_dev": "npm run build && docker-compose up",
+    "cy:open": "cypress open",
+    "cy:test": "cypress run --browser chrome"
   },
   "devDependencies": {
+    "cypress": "3.4.1",
     "lerna": "3.16.4"
   }
 }
