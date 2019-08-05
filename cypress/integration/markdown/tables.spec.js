@@ -1,0 +1,22 @@
+describe('tables', () => {
+  beforeEach(() => {
+    cy.visit('/viewdoc/markdown-demo')
+  })
+  it('should render | | as table', () => {
+    cy.get('pre').contains('| Left-aligned | Center-aligned | Right-aligned |')
+      .should('contain', '| ------------ | :------------: | ------------: |')
+      .and('contain', '| Row 1        | Row 1          | Row 1         |')
+    cy.get('table th').contains('Left-aligned')
+      .should('not.have.attr', 'align')
+    cy.get('table th').contains('Center-aligned')
+      .should('have.attr', 'align').and('eq', 'center')
+    cy.get('table th').contains('Right-aligned')
+      .should('have.attr', 'align').and('eq', 'right')
+    cy.get('table td').contains('Row 1').as('cell1')
+    cy.get('@cell1').should('not.have.attr', 'align')
+    cy.get('@cell1').next().contains('Row 1').as('cell2')
+    cy.get('@cell2').should('have.attr', 'align').and('eq', 'center')
+    cy.get('@cell2').next().contains('Row 1').as('cell3')
+    cy.get('@cell3').should('have.attr', 'align').and('eq', 'right')
+  })
+})
