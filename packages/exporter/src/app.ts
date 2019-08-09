@@ -1,16 +1,16 @@
+import { ExporterConfig } from '@viewdoc/api'
+import { ExportInputParams } from '@viewdoc/core/lib/doc'
 import bodyParser from 'body-parser'
+import config from 'config'
 import spawn from 'cross-spawn'
 import crypto from 'crypto'
 import express, { Application, Request, Response } from 'express'
 import { createReadStream, ensureDirSync, removeSync, writeFileSync } from 'fs-extra'
 import path from 'path'
 
-interface InputParams {
-  readonly html: string
-}
-
 export class App {
   public app: Application
+  private exporterConfig!: ExporterConfig
 
   constructor () {
     this.app = express()
@@ -21,19 +21,20 @@ export class App {
     this.app.use(bodyParser.json())
     this.app.use(bodyParser.urlencoded({ extended: false }))
     this.app.post('/', (req, res) => this.process(req, res))
+    this.exporterConfig = config.get('exporter')
   }
 
   private async process (req: Request, res: Response) {
-    const inputParams: InputParams = req.body
+    const inputParams: ExportInputParams = req.body
     const id = crypto.randomBytes(16).toString('hex')
-    const basePath = path.join(__dirname, `../../../tmp/exporter/${id}`)
+    const basePath = path.join(this.exporterConfig.basePath, id)
     const inputPath = path.join(basePath, 'input.html')
-    const outputPath = path.join(basePath, 'output.mobi')
+    const outputPath = path.join(basePath, `output.${inputParams.format || 'mobi'}`)
     ensureDirSync(basePath)
     writeFileSync(inputPath, inputParams.html)
     const error = await this.convert(inputPath, outputPath)
     if (!error) {
-      const output = createReadStream(outputPath, { encoding: 'base64' })
+      const output = createReadStream(outputPath)
       output.pipe(res)
     } else {
       res.status(500)

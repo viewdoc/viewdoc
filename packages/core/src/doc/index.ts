@@ -1,3 +1,5 @@
 export * from './repo-info'
 export * from './doc-page-params'
+export * from './export-input-params'
+export * from './export-params'
 export * from './doc-content'

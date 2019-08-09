@@ -18,9 +18,18 @@ export interface MarkupServiceConfig {
   baseUrl: string
 }
 
+export interface ExporterServiceConfig {
+  baseUrl: string
+}
+
+export interface ExporterConfig {
+  basePath: string
+}
+
 export interface ApiConfig {
   cache: CacheConfig
   github: GithubConfig
   gitlab: GitlabConfig
   markupService: MarkupServiceConfig
+  exporterService: ExporterServiceConfig
 }

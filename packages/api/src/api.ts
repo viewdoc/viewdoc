@@ -1,6 +1,6 @@
 import { FileBasedCache } from '@viewdoc/cache'
 import { CacheInterface } from '@viewdoc/core/lib/cache'
-import { DocContent, DocPageParams } from '@viewdoc/core/lib/doc'
+import { DocContent, DocPageParams, ExportInputParams } from '@viewdoc/core/lib/doc'
 import { FormatInterface, FormatManager } from '@viewdoc/core/lib/format'
 import { SiteConfig, SiteConfigResolver } from '@viewdoc/core/lib/site-config'
 import { RepoInterface, SourceInterface, SourceManager } from '@viewdoc/core/lib/source'
@@ -8,7 +8,9 @@ import { GithubApi, GithubSource } from '@viewdoc/github'
 import { GitlabApi, GitlabSource } from '@viewdoc/gitlab'
 import { DateTime } from 'luxon'
 import path from 'path'
+import { Readable } from 'stream'
 import { ApiConfig } from './config'
+import { ExporterService } from './exporter-service'
 import { MarkupService } from './markup-service'
 
 export class ViewDocApi {
@@ -16,6 +18,7 @@ export class ViewDocApi {
   // These fields will be initialized in ensureReady.
   private sourceManager!: SourceManager
   private formatManager!: FormatManager
+  private exporterService!: ExporterService
 
   constructor (private readonly config: ApiConfig) {}
 
@@ -28,6 +31,10 @@ export class ViewDocApi {
       return
     }
     return this.getDocContentFromRepo(repo, docPath, repoId, repoIdsParts[1])
+  }
+
+  async exportDocContent (exportInputParams: ExportInputParams): Promise<Readable> {
+    return this.exporterService.process(exportInputParams)
   }
 
   private async getRepo (subdomain: string, owner: string, repo: string): Promise<RepoInterface | undefined> {
@@ -76,6 +83,7 @@ export class ViewDocApi {
     await cache.start()
     this.sourceManager = new SourceManager(this.createSources(cache))
     this.formatManager = new FormatManager(this.createFormats())
+    this.exporterService = new ExporterService(this.config.exporterService)
     this.ready = true
   }
 
