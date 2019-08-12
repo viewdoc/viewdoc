@@ -16,6 +16,17 @@ export interface CreateDocContentOptions {
   readonly content: string
 }
 
+interface ProcessedHtmlContent {
+  readonly body: string
+  readonly toc: string
+}
+
+interface HeadingElement {
+  readonly order: number
+  readonly url: string
+  readonly text: string
+}
+
 export class SourceHelper {
   decodeBase64 (data: string): string {
     return Buffer.from(data, 'base64').toString()
@@ -24,8 +35,8 @@ export class SourceHelper {
   async createDocContent (createDocContentOptions: CreateDocContentOptions): Promise<DocContent> {
     const { options, info, resolvedPath, format, content } = createDocContentOptions
     const { originalRepoId, siteConfig } = options
-    const { toc, output } = await format.getHtmlContent(content)
-    const body = this.transformHtml(output, info, originalRepoId, resolvedPath)
+    const { output } = await format.getHtmlContent(content)
+    const { body, toc } = this.transformHtml(output, info, originalRepoId, resolvedPath)
     return {
       info,
       resolvedPath,
@@ -39,9 +50,15 @@ export class SourceHelper {
     return jsYaml.safeLoad(siteConfigContent)
   }
 
-  private transformHtml (html: string, info: RepoInfo, originalRepoId: string, resolvedPath: string): string {
+  private transformHtml (
+    html: string,
+    info: RepoInfo,
+    originalRepoId: string,
+    resolvedPath: string,
+  ): ProcessedHtmlContent {
     const query: CheerioStatic = cheerio.load(html)
     const currentUrl = urlJoin('/', info.owner, originalRepoId, resolvedPath)
+    // Fix internal urls
     query('a').each((index, element) => {
       const anchor = query(element)
       const originalUrl = anchor.attr('href')
@@ -52,6 +69,31 @@ export class SourceHelper {
         anchor.attr('href', resolvedUrl)
       }
     })
-    return query.html()
+    // Create table of contents
+    const headings: HeadingElement[] = []
+    query('h2,h3,h4').each((index, element) => {
+      const heading = query(element)
+      const text = heading
+        .clone()
+        .children()
+        .remove()
+        .end()
+        .text()
+        .replace(/^\s+|\s+$/g, '')
+      headings.push({
+        order: +element.name[1] - 1,
+        url: heading.find('a').attr('href'),
+        text,
+      })
+    })
+    const toc = headings
+      .map((heading) => {
+        return `<div style="margin-left: ${heading.order * 15}px"><a href='${heading.url}'>${heading.text}</a></div>`
+      })
+      .join('')
+    return {
+      body: query.html(),
+      toc,
+    }
   }
 }

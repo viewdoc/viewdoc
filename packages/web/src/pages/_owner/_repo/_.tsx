@@ -72,7 +72,7 @@ export default class DocPage extends Vue {
               )
             }
           </div>
-          <div domProps={{ innerHTML: this.pageContent.toc }}/>
+          <div style='margin-top: 1rem;' domProps={{ innerHTML: this.pageContent.toc }}/>
         </div>
         <div ref='pageContentBody' domProps={{ innerHTML: this.pageContent.body }}/>
       </main>

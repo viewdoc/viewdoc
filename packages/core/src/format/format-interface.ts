@@ -1,5 +1,4 @@
 export interface HtmlContent {
-  toc: string
   output: string
 }
 
