@@ -30,7 +30,7 @@
     "lerna": "3.16.4",
     "prettier": "1.18.2",
     "progress": "2.0.3",
-    "rimraf": "2.6.3",
+    "rimraf": "2.7.0",
     "table": "5.4.5",
     "tslint": "5.18.0",
     "tslint-config-standard": "8.0.1",

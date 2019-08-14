@@ -56,7 +56,7 @@ export class SourceHelper {
     originalRepoId: string,
     resolvedPath: string,
   ): ProcessedHtmlContent {
-    const query: CheerioStatic = cheerio.load(html)
+    const query: CheerioStatic = cheerio.load(html, { xmlMode: true })
     const currentUrl = urlJoin('/', info.owner, originalRepoId, resolvedPath)
     // Fix internal urls
     query('a').each((index, element) => {
