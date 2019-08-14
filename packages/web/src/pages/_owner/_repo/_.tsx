@@ -3,7 +3,8 @@ import { DocContent, DocPageParams } from '@viewdoc/core/es6/doc'
 import { SiteConfigResolver } from '@viewdoc/core/es6/site-config'
 import { ExportFormat } from '@viewdoc/core/lib/doc'
 import axios from 'axios'
-import { Component, Vue } from 'nuxt-property-decorator'
+import isRelativeUrl from 'is-relative-url'
+import { Component, Vue, Watch } from 'nuxt-property-decorator'
 import { SidebarElement } from 'sidebarjs'
 import { MetaInfo } from 'vue-meta'
 
@@ -36,6 +37,7 @@ export default class DocPage extends Vue {
   private readonly siteConfigResolver = new SiteConfigResolver()
   private readonly pageContent!: DocContent
   private readonly baseExportUrl!: string
+  private hrefElementsList!: HTMLAnchorElement[]
 
   // TODO make this field private when used to open/close sidebar
   public sidebar!: SidebarElement
@@ -53,12 +55,52 @@ export default class DocPage extends Vue {
     }
   }
 
+  @Watch('$route', { immediate: true, deep: true })
+  onUrlChange () {
+    this.removeListeners()
+  }
+
+  navigate (event: MouseEvent) {
+    const target: EventTarget | null = event.target
+    if (!(target instanceof HTMLAnchorElement)) {
+      return
+    }
+    const href = target.getAttribute('href')
+    if (href && isRelativeUrl(href) && !href.startsWith('#')) {
+      event.preventDefault()
+      this.$router.push(href)
+    }
+  }
+
+  addListeners () {
+    this.removeListeners()
+    const hrefElements: HTMLCollectionOf<HTMLAnchorElement> = this.$el.getElementsByTagName('a')
+    this.hrefElementsList = Array.prototype.slice.call(hrefElements)
+    this.hrefElementsList.forEach((hrefElement) => {
+      hrefElement.addEventListener('click', this.navigate, false)
+    })
+  }
+
+  removeListeners () {
+    if (this.hrefElementsList) {
+      this.hrefElementsList.forEach((hrefElement) => {
+        hrefElement.removeEventListener('click', this.navigate, false)
+      })
+      this.hrefElementsList = []
+    }
+  }
+
   mounted () {
     this.sidebar = new SidebarElement({ responsive: true, mainContent: this.$refs.pageContentBody })
     // Fix scrolling with hash link https://forum.vuejs.org/t/how-to-handle-anchors-bookmarks-with-vue-router/14563
     if (this.$route.hash) {
       setTimeout(() => { location.href = this.$route.hash })
     }
+    this.addListeners()
+  }
+
+  beforeDestroy () {
+    this.removeListeners()
   }
 
   render () {
