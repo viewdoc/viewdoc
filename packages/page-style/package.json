@@ -1,0 +1,26 @@
+{
+  "name": "@viewdoc/page-style",
+  "version": "0.0.0",
+  "repository": "https://github.com/viewdoc/viewdoc/tree/master/packages/page-style",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "vd-dev clean",
+    "build": "vd-dev build && npm run build:css",
+    "clean:css": "rimraf dist",
+    "build:css": "parcel build scss/main.scss --no-source-maps",
+    "postformat": "npm run eslint",
+    "publish:prepare": "npm run clean && npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@viewdoc/tiny.css": "0.0.0"
+  },
+  "devDependencies": {
+    "@viewdoc/dev": "0.0.0",
+    "parcel-bundler": "1.12.3",
+    "rimraf": "2.6.3"
+  }
+}

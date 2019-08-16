@@ -1,23 +1,2 @@
-@import '@viewdoc/tiny.css/dist/base.css';
+@import '@viewdoc/page-style/dist/main.css';
 @import 'sidebarjs/lib/sidebarjs.css';
-
-h1, h2, h3, h4, h5, h6 {
-  .anchor {
-    width: 2rem;
-    margin-left: -2rem;
-    display: inline-block;
-    text-decoration: none;
-    text-align: right;
-    color: inherit;
-    font-size: 80%;
-    font-weight: normal;
-    opacity: 0;
-  }
-  &:hover {
-    .anchor {
-      opacity: 1;
-    }
-  }
-}
-
-.overflow-y-auto { overflow-y: auto; }

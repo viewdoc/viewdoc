@@ -54,6 +54,7 @@ app.get('/export', async (req: Request, res: Response, next: NextFunction) => {
       return
     }
     const exportInputParams: ExportInputParams = {
+      siteConfig: docContent.siteConfig,
       html: docContent.body,
       format: exportParams.format,
     }
