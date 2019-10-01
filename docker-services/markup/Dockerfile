@@ -1,4 +1,4 @@
-FROM ruby:2.6.3-alpine
+FROM ruby:2.6.5-alpine
 
 RUN apk update && apk upgrade && apk add --update perl make gcc g++ libc-dev py-pip
 RUN pip install docutils
